@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { trendRealTime, trendAttuali, trendEvergreen, canaliInspo } from "@/lib/trends";
-import { ArrowRight, Zap, TrendingUp, Sparkles } from "lucide-react";
+import { ArrowRight, Zap, TrendingUp, Sparkles, Music2 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -59,6 +59,12 @@ function Index() {
       //count: linkedin.length,
       icon: Sparkles,
       blurb: "Ispirazioni dal mondo del marketing",
+    },
+    {
+      to: "/tiktok-hashtag",
+      label: "TikTok Hashtag",
+      icon: Music2,
+      blurb: "Post pubblici raccolti automaticamente dall'hashtag #starhotels.",
     },
   ] as const;
 
