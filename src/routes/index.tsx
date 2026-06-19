@@ -15,8 +15,6 @@ export const Route = createFileRoute("/")({
   }),
   component: Index,
 });
-// TIKTOK HASHTAG EMBED CODE
-<blockquote class="tiktok-embed" cite="https://www.tiktok.com/tag/starhotels" data-tag-id="starhotels" data-embed-from="embed_page" data-embed-type="tag" style="max-width:780px; min-width:288px;"> <section> <a target="_blank" href="https://www.tiktok.com/tag/starhotels?refer=hashtag_embed">#starhotels</a> </section> </blockquote> <script async src="https://www.tiktok.com/embed.js"></script>
 
 function Index() {
   const cards = [
