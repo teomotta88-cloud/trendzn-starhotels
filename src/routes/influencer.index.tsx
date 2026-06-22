@@ -19,7 +19,7 @@ export const Route = createFileRoute("/influencer/")({
 });
 
 const TRENDS_JSON_URL =
-  "https://api.github.com/repos/teomotta88-cloud/trendzn/contents/src/data/trends.json";
+  "https://api.github.com/repos/teomotta88-cloud/trendzn-starhotels/contents/src/data/trends.json";
 
 function detectPlatform(url: string): "instagram" | "tiktok" | "youtube" | "web" {
   if (/instagram\.com/.test(url)) return "instagram";
