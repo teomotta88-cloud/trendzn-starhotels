@@ -29,13 +29,20 @@ export const Route = createFileRoute("/api/public/hooks/sync-tiktok-hashtag")({
             return Response.json({ ok: true, inserted: 0 });
           }
 
-          const rows = urls.map((url) => ({
+          // Tutte le righe di uno stesso batch condividerebbero lo stesso now() di default
+          // (now() è stabile per transazione in Postgres), rendendo l'ordine "più recenti
+          // prima" inaffidabile. Assegniamo quindi created_at decrescenti in base alla
+          // posizione nell'array: lo scraper restituisce gli URL nell'ordine di TikTok
+          // (più recente prima), quindi il primo elemento riceve il timestamp più alto.
+          const now = Date.now();
+          const rows = urls.map((url, index) => ({
             url: normalizeUrl(url),
             section: SECTION,
             category: CATEGORY,
             tags: [hashtag],
             status: "approved" as const,
             submitted_by: "tiktok-hashtag-scraper",
+            created_at: new Date(now - index).toISOString(),
           }));
 
           const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
