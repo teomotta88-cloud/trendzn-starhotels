@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TrendRealTimeRouteImport } from './routes/trend-real-time'
 import { Route as TrendEvergreenRouteImport } from './routes/trend-evergreen'
 import { Route as TrendAttualiRouteImport } from './routes/trend-attuali'
+import { Route as TiktokHashtagRouteImport } from './routes/tiktok-hashtag'
 import { Route as LinkedinRouteImport } from './routes/linkedin'
 import { Route as InfluencerFeedRouteImport } from './routes/influencer-feed'
 import { Route as IndexRouteImport } from './routes/index'
@@ -20,6 +21,7 @@ import { Route as FeedIndexRouteImport } from './routes/feed.index'
 import { Route as CanaliInspoIndexRouteImport } from './routes/canali-inspo.index'
 import { Route as InfluencerIdRouteImport } from './routes/influencer.$id'
 import { Route as CanaliInspoIdRouteImport } from './routes/canali-inspo.$id'
+import { Route as ApiPublicHooksSyncTiktokHashtagRouteImport } from './routes/api/public/hooks/sync-tiktok-hashtag'
 import { Route as ApiPublicHooksSubmitManualRouteImport } from './routes/api/public/hooks/submit-manual'
 import { Route as ApiPublicHooksPollGmailRouteImport } from './routes/api/public/hooks/poll-gmail'
 import { Route as ApiPublicHooksLinkPreviewRouteImport } from './routes/api/public/hooks/link-preview'
@@ -38,6 +40,11 @@ const TrendEvergreenRoute = TrendEvergreenRouteImport.update({
 const TrendAttualiRoute = TrendAttualiRouteImport.update({
   id: '/trend-attuali',
   path: '/trend-attuali',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TiktokHashtagRoute = TiktokHashtagRouteImport.update({
+  id: '/tiktok-hashtag',
+  path: '/tiktok-hashtag',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LinkedinRoute = LinkedinRouteImport.update({
@@ -80,6 +87,12 @@ const CanaliInspoIdRoute = CanaliInspoIdRouteImport.update({
   path: '/canali-inspo/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicHooksSyncTiktokHashtagRoute =
+  ApiPublicHooksSyncTiktokHashtagRouteImport.update({
+    id: '/api/public/hooks/sync-tiktok-hashtag',
+    path: '/api/public/hooks/sync-tiktok-hashtag',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicHooksSubmitManualRoute =
   ApiPublicHooksSubmitManualRouteImport.update({
     id: '/api/public/hooks/submit-manual',
@@ -108,6 +121,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/influencer-feed': typeof InfluencerFeedRoute
   '/linkedin': typeof LinkedinRoute
+  '/tiktok-hashtag': typeof TiktokHashtagRoute
   '/trend-attuali': typeof TrendAttualiRoute
   '/trend-evergreen': typeof TrendEvergreenRoute
   '/trend-real-time': typeof TrendRealTimeRoute
@@ -120,11 +134,13 @@ export interface FileRoutesByFullPath {
   '/api/public/hooks/link-preview': typeof ApiPublicHooksLinkPreviewRoute
   '/api/public/hooks/poll-gmail': typeof ApiPublicHooksPollGmailRoute
   '/api/public/hooks/submit-manual': typeof ApiPublicHooksSubmitManualRoute
+  '/api/public/hooks/sync-tiktok-hashtag': typeof ApiPublicHooksSyncTiktokHashtagRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/influencer-feed': typeof InfluencerFeedRoute
   '/linkedin': typeof LinkedinRoute
+  '/tiktok-hashtag': typeof TiktokHashtagRoute
   '/trend-attuali': typeof TrendAttualiRoute
   '/trend-evergreen': typeof TrendEvergreenRoute
   '/trend-real-time': typeof TrendRealTimeRoute
@@ -137,12 +153,14 @@ export interface FileRoutesByTo {
   '/api/public/hooks/link-preview': typeof ApiPublicHooksLinkPreviewRoute
   '/api/public/hooks/poll-gmail': typeof ApiPublicHooksPollGmailRoute
   '/api/public/hooks/submit-manual': typeof ApiPublicHooksSubmitManualRoute
+  '/api/public/hooks/sync-tiktok-hashtag': typeof ApiPublicHooksSyncTiktokHashtagRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/influencer-feed': typeof InfluencerFeedRoute
   '/linkedin': typeof LinkedinRoute
+  '/tiktok-hashtag': typeof TiktokHashtagRoute
   '/trend-attuali': typeof TrendAttualiRoute
   '/trend-evergreen': typeof TrendEvergreenRoute
   '/trend-real-time': typeof TrendRealTimeRoute
@@ -155,6 +173,7 @@ export interface FileRoutesById {
   '/api/public/hooks/link-preview': typeof ApiPublicHooksLinkPreviewRoute
   '/api/public/hooks/poll-gmail': typeof ApiPublicHooksPollGmailRoute
   '/api/public/hooks/submit-manual': typeof ApiPublicHooksSubmitManualRoute
+  '/api/public/hooks/sync-tiktok-hashtag': typeof ApiPublicHooksSyncTiktokHashtagRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -162,6 +181,7 @@ export interface FileRouteTypes {
     | '/'
     | '/influencer-feed'
     | '/linkedin'
+    | '/tiktok-hashtag'
     | '/trend-attuali'
     | '/trend-evergreen'
     | '/trend-real-time'
@@ -174,11 +194,13 @@ export interface FileRouteTypes {
     | '/api/public/hooks/link-preview'
     | '/api/public/hooks/poll-gmail'
     | '/api/public/hooks/submit-manual'
+    | '/api/public/hooks/sync-tiktok-hashtag'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/influencer-feed'
     | '/linkedin'
+    | '/tiktok-hashtag'
     | '/trend-attuali'
     | '/trend-evergreen'
     | '/trend-real-time'
@@ -191,11 +213,13 @@ export interface FileRouteTypes {
     | '/api/public/hooks/link-preview'
     | '/api/public/hooks/poll-gmail'
     | '/api/public/hooks/submit-manual'
+    | '/api/public/hooks/sync-tiktok-hashtag'
   id:
     | '__root__'
     | '/'
     | '/influencer-feed'
     | '/linkedin'
+    | '/tiktok-hashtag'
     | '/trend-attuali'
     | '/trend-evergreen'
     | '/trend-real-time'
@@ -208,12 +232,14 @@ export interface FileRouteTypes {
     | '/api/public/hooks/link-preview'
     | '/api/public/hooks/poll-gmail'
     | '/api/public/hooks/submit-manual'
+    | '/api/public/hooks/sync-tiktok-hashtag'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   InfluencerFeedRoute: typeof InfluencerFeedRoute
   LinkedinRoute: typeof LinkedinRoute
+  TiktokHashtagRoute: typeof TiktokHashtagRoute
   TrendAttualiRoute: typeof TrendAttualiRoute
   TrendEvergreenRoute: typeof TrendEvergreenRoute
   TrendRealTimeRoute: typeof TrendRealTimeRoute
@@ -226,6 +252,7 @@ export interface RootRouteChildren {
   ApiPublicHooksLinkPreviewRoute: typeof ApiPublicHooksLinkPreviewRoute
   ApiPublicHooksPollGmailRoute: typeof ApiPublicHooksPollGmailRoute
   ApiPublicHooksSubmitManualRoute: typeof ApiPublicHooksSubmitManualRoute
+  ApiPublicHooksSyncTiktokHashtagRoute: typeof ApiPublicHooksSyncTiktokHashtagRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -249,6 +276,13 @@ declare module '@tanstack/react-router' {
       path: '/trend-attuali'
       fullPath: '/trend-attuali'
       preLoaderRoute: typeof TrendAttualiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tiktok-hashtag': {
+      id: '/tiktok-hashtag'
+      path: '/tiktok-hashtag'
+      fullPath: '/tiktok-hashtag'
+      preLoaderRoute: typeof TiktokHashtagRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/linkedin': {
@@ -307,6 +341,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CanaliInspoIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/sync-tiktok-hashtag': {
+      id: '/api/public/hooks/sync-tiktok-hashtag'
+      path: '/api/public/hooks/sync-tiktok-hashtag'
+      fullPath: '/api/public/hooks/sync-tiktok-hashtag'
+      preLoaderRoute: typeof ApiPublicHooksSyncTiktokHashtagRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/submit-manual': {
       id: '/api/public/hooks/submit-manual'
       path: '/api/public/hooks/submit-manual'
@@ -342,6 +383,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   InfluencerFeedRoute: InfluencerFeedRoute,
   LinkedinRoute: LinkedinRoute,
+  TiktokHashtagRoute: TiktokHashtagRoute,
   TrendAttualiRoute: TrendAttualiRoute,
   TrendEvergreenRoute: TrendEvergreenRoute,
   TrendRealTimeRoute: TrendRealTimeRoute,
@@ -354,6 +396,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicHooksLinkPreviewRoute: ApiPublicHooksLinkPreviewRoute,
   ApiPublicHooksPollGmailRoute: ApiPublicHooksPollGmailRoute,
   ApiPublicHooksSubmitManualRoute: ApiPublicHooksSubmitManualRoute,
+  ApiPublicHooksSyncTiktokHashtagRoute: ApiPublicHooksSyncTiktokHashtagRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
