@@ -77,7 +77,7 @@ function Index() {
             TRENDZN! Tutti i trend social, in un posto solo.
           </h1>
           <p className="text-base text-muted-foreground sm:text-lg">
-            Creato dal vostro MM su misura per il Team Social.
+            Creato da SBAM su misura per il Team Marketing.
           </p>
         </div>
       </section>
