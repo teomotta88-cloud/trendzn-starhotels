@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, useCallback } from "react";
 import type { TrendItem } from "@/lib/trends";
 import { TrendGrid } from "@/components/TrendGrid";
+import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/tiktok-hashtag")({
@@ -12,6 +13,7 @@ export const Route = createFileRoute("/tiktok-hashtag")({
 });
 
 const SECTION = "tiktok-hashtag";
+const PAGE_SIZE = 12;
 
 type DbRow = {
   id: string;
@@ -37,23 +39,41 @@ function rowToTrendItem(row: DbRow): TrendItem {
 function Page() {
   const [dbRows, setDbRows] = useState<DbRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(false);
 
-  const fetchRows = useCallback(() => {
-    supabase
+  const fetchPage = useCallback((page: number) => {
+    const from = page * PAGE_SIZE;
+    const to = from + PAGE_SIZE - 1;
+    return supabase
       .from("trend_submissions")
       .select("id, url, title, category, industry, tags")
       .eq("section", SECTION)
       .eq("status", "approved")
       .order("created_at", { ascending: false })
+      .range(from, to)
       .then(({ data }) => {
-        if (data) setDbRows(data as DbRow[]);
-        setLoading(false);
+        const rows = (data as DbRow[]) ?? [];
+        setHasMore(rows.length === PAGE_SIZE);
+        return rows;
       });
   }, []);
 
   useEffect(() => {
-    fetchRows();
-  }, [fetchRows]);
+    fetchPage(0).then((rows) => {
+      setDbRows(rows);
+      setLoading(false);
+    });
+  }, [fetchPage]);
+
+  const handleLoadMore = useCallback(() => {
+    setLoadingMore(true);
+    const page = Math.floor(dbRows.length / PAGE_SIZE);
+    fetchPage(page).then((rows) => {
+      setDbRows((prev) => [...prev, ...rows]);
+      setLoadingMore(false);
+    });
+  }, [dbRows.length, fetchPage]);
 
   const handleDelete = useCallback((url: string) => {
     setDbRows((prev) => prev.filter((r) => r.url !== url));
@@ -87,7 +107,16 @@ function Page() {
           Nessun post trovato ancora per questo hashtag.
         </div>
       ) : (
-        <TrendGrid items={allItems} dbIds={dbIds} onDelete={handleDelete} />
+        <>
+          <TrendGrid items={allItems} dbIds={dbIds} onDelete={handleDelete} />
+          {hasMore && (
+            <div className="flex justify-center">
+              <Button variant="outline" onClick={handleLoadMore} disabled={loadingMore}>
+                {loadingMore ? "Caricamento…" : "Carica altri"}
+              </Button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
