@@ -141,13 +141,13 @@ function RootComponent() {
 const NAV_ITEMS = [
   { to: "/", label: "Home" },
   { to: "/trend-real-time", label: "Trend Real Time" },
-  { to: "/trend-attuali", label: "Trend Attuali" },
   { to: "/trend-evergreen", label: "Trend Evergreen" },
   { to: "/canali-inspo", label: "Canali Inspo" },
   { to: "/linkedin", label: "LinkedIn" },
   { to: "/influencer", label: "Influencer" },
   { to: "/influencer-feed", label: "Influencer Feed" },
   { to: "/feed", label: "Feed" },
+  { to: "/tiktok-hashtag", label: "TikTok Hashtag" },
 ];
 
 function Navbar() {
