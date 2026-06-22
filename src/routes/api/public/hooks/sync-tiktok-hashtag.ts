@@ -13,6 +13,21 @@ function normalizeUrl(url: string): string {
   }
 }
 
+// Gli ID dei video TikTok sono "snowflake": i 32 bit più significativi
+// codificano il timestamp Unix (in secondi) di creazione del post.
+function decodePostedAt(url: string): string | null {
+  const match = url.match(/\/video\/(\d+)/);
+  if (!match) return null;
+  try {
+    const id = BigInt(match[1]);
+    const seconds = Number(id >> 32n);
+    if (!Number.isFinite(seconds) || seconds <= 0) return null;
+    return new Date(seconds * 1000).toISOString();
+  } catch {
+    return null;
+  }
+}
+
 export const Route = createFileRoute("/api/public/hooks/sync-tiktok-hashtag")({
   server: {
     handlers: {
@@ -30,10 +45,9 @@ export const Route = createFileRoute("/api/public/hooks/sync-tiktok-hashtag")({
           }
 
           // Tutte le righe di uno stesso batch condividerebbero lo stesso now() di default
-          // (now() è stabile per transazione in Postgres), rendendo l'ordine "più recenti
-          // prima" inaffidabile. Assegniamo quindi created_at decrescenti in base alla
-          // posizione nell'array: lo scraper restituisce gli URL nell'ordine di TikTok
-          // (più recente prima), quindi il primo elemento riceve il timestamp più alto.
+          // (now() è stabile per transazione in Postgres). created_at resta utile come data
+          // di inserimento, ma l'ordinamento della pagina usa posted_at (data reale del post,
+          // decodificata dall'ID del video).
           const now = Date.now();
           const rows = urls.map((url, index) => ({
             url: normalizeUrl(url),
@@ -43,6 +57,7 @@ export const Route = createFileRoute("/api/public/hooks/sync-tiktok-hashtag")({
             status: "approved" as const,
             submitted_by: "tiktok-hashtag-scraper",
             created_at: new Date(now - index).toISOString(),
+            posted_at: decodePostedAt(url),
           }));
 
           const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
