@@ -14,7 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      trend_submissions: {
+        Row: {
+          category: string | null
+          created_at: string
+          id: string
+          industry: string | null
+          raw_email: string | null
+          section: string | null
+          status: Database["public"]["Enums"]["trend_submission_status"]
+          submitted_by: string | null
+          tags: string[] | null
+          title: string | null
+          url: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          id?: string
+          industry?: string | null
+          raw_email?: string | null
+          section?: string | null
+          status?: Database["public"]["Enums"]["trend_submission_status"]
+          submitted_by?: string | null
+          tags?: string[] | null
+          title?: string | null
+          url: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          id?: string
+          industry?: string | null
+          raw_email?: string | null
+          section?: string | null
+          status?: Database["public"]["Enums"]["trend_submission_status"]
+          submitted_by?: string | null
+          tags?: string[] | null
+          title?: string | null
+          url?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +64,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      trend_submission_status: "pending" | "approved" | "rejected"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +191,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      trend_submission_status: ["pending", "approved", "rejected"],
+    },
   },
 } as const
