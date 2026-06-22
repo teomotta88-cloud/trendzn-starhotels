@@ -20,6 +20,8 @@ type DbRow = {
   category: string | null;
   industry: string | null;
   tags: string[] | null;
+  score: number | null;
+  created_at: string | null;
 };
 
 function rowToTrendItem(row: DbRow): TrendItem {
@@ -31,6 +33,8 @@ function rowToTrendItem(row: DbRow): TrendItem {
     industry: row.industry ?? null,
     applicazione: null,
     canali: null,
+    score: row.score ?? null,
+    createdAt: row.created_at ?? null,
   };
 }
 
@@ -41,7 +45,7 @@ function Page() {
   const fetchRows = useCallback(() => {
     supabase
       .from("trend_submissions")
-      .select("id, url, title, category, industry, tags")
+      .select("id, url, title, category, industry, tags, score, created_at")
       .eq("section", "trend-attuali")
       .eq("status", "approved")
       .order("created_at", { ascending: false })
@@ -77,7 +81,7 @@ function Page() {
       {loading ? (
         <div className="text-sm text-muted-foreground">Caricamento…</div>
       ) : (
-        <TrendGrid items={allItems} dbIds={dbIds} onDelete={handleDelete} />
+        <TrendGrid items={allItems} dbIds={dbIds} onDelete={handleDelete} showScore />
       )}
     </div>
   );
