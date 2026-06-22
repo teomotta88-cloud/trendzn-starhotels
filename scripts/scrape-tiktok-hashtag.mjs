@@ -12,6 +12,10 @@
 //   verifica ("Verify to continue" / captcha) o un feed generico al posto dei veri
 //   risultati dell'hashtag. In questi casi lo script NON deve restituire link presi da
 //   quella pagina, altrimenti si inquina il database con contenuti non correlati.
+// - La pagina hashtag da sola non garantisce che ogni video mostrato abbia davvero quel
+//   tag esatto: ogni candidato viene quindi aperto singolarmente e si verifica che tra i
+//   suoi hashtag reali (link /tag/...) ce ne sia uno identico (case-insensitive) al
+//   target. Questo rende lo scraping più lento ma evita falsi positivi.
 
 import { chromium } from "playwright";
 
@@ -24,6 +28,7 @@ const VERIFY_WALL_SELECTOR = '#captcha_container, [data-e2e="captcha-verify-ifra
 const VERIFY_WALL_TEXT = /verify to continue|verifica per continuare|conferma che sei un essere umano/i;
 const SCROLL_STEPS = 8;
 const SCROLL_DELAY_MS = 1500;
+const VIDEO_DESC_SELECTOR = '[data-e2e="browse-video-desc"], [data-e2e="video-desc"]';
 
 async function isVerificationWall(page) {
   const hasWallElement = await page.$(VERIFY_WALL_SELECTOR);
@@ -31,6 +36,33 @@ async function isVerificationWall(page) {
 
   const bodyText = await page.evaluate(() => document.body?.innerText ?? "");
   return VERIFY_WALL_TEXT.test(bodyText);
+}
+
+// Verifica che il video alla URL data abbia, tra i suoi hashtag reali, una corrispondenza
+// esatta (case-insensitive) con `tag`. Apre il video in una tab dedicata del browser già
+// avviato e legge i link /tag/... presenti nella didascalia.
+async function videoHasExactHashtag(browser, videoUrl, tag) {
+  const tagLower = tag.toLowerCase();
+  const page = await browser.newPage();
+  try {
+    await page.goto(videoUrl, { waitUntil: "domcontentloaded", timeout: 20000 });
+    await page.waitForSelector(VIDEO_DESC_SELECTOR, { timeout: 8000 }).catch(() => {});
+
+    const tags = await page.$$eval('a[href*="/tag/"]', (els) =>
+      els
+        .map((el) => {
+          const match = el.getAttribute("href")?.match(/\/tag\/([^/?#]+)/);
+          return match ? decodeURIComponent(match[1]) : null;
+        })
+        .filter(Boolean),
+    );
+
+    return tags.some((t) => t.toLowerCase() === tagLower);
+  } catch {
+    return false;
+  } finally {
+    await page.close();
+  }
 }
 
 export async function scrapeHashtag(tag) {
@@ -70,9 +102,18 @@ export async function scrapeHashtag(tag) {
       (els) => els.map((el) => el.getAttribute("href")).filter(Boolean),
     );
 
-    return Array.from(
+    const candidates = Array.from(
       new Set(hrefs.map((h) => (h.startsWith("http") ? h : `https://www.tiktok.com${h}`))),
     );
+
+    const confirmed = [];
+    for (const candidate of candidates) {
+      if (await videoHasExactHashtag(browser, candidate, tag)) {
+        confirmed.push(candidate);
+      }
+    }
+
+    return confirmed;
   } finally {
     await browser.close();
   }
