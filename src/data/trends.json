@@ -1,1 +1,57 @@
-PLACEHOLDER
+{
+  "trend_real_time": [],
+  "trend_attuali": [
+    {
+      "category": "Trend Attuali",
+      "links": [
+        "https://www.tiktok.com/@rebeccagotti/photo/7623117961422769410"
+      ],
+      "descrizione": null,
+      "nome_trend": "TOP 5 film horror",
+      "industry": "Multi brand",
+      "applicazione": null,
+      "canali": null
+    },
+    {
+      "category": "Trend Attuali",
+      "links": [
+        "https://www.tiktok.com/@violasssspam/video/7628877683837144342"
+      ],
+      "descrizione": null,
+      "nome_trend": "Transition con comparsa oggetto",
+      "industry": "Multi brand",
+      "applicazione": null,
+      "canali": null
+    },
+    {
+      "category": "Trend Attuali",
+      "links": [
+        "https://www.tiktok.com/@der_connaisseur/video/7645742616713186593"
+      ],
+      "descrizione": null,
+      "nome_trend": "Transition con comparsa oggetto",
+      "industry": "Multi brand",
+      "applicazione": null,
+      "canali": null
+    }
+  ],
+  "trend_evergreen": [],
+  "canali_inspo": [
+    {
+      "id": "starhotels",
+      "name": "Profilo ufficiale Starhotels",
+      "urls": [
+        "https://www.instagram.com/starhotels"
+      ],
+      "descrizione": "Profilo Instagram ufficiale Starhotels",
+      "accounts": [
+        {
+          "platform": "instagram",
+          "handle": "starhotels",
+          "url": "https://www.instagram.com/starhotels"
+        }
+      ]
+    }
+  ],
+  "influencer_profiles": []
+}
