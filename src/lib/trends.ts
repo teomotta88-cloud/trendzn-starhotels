@@ -8,6 +8,8 @@ export type TrendItem = {
   industry: string | null;
   applicazione: string | null;
   canali: string | null;
+  score?: number | null;
+  createdAt?: string | null;
 };
 
 export type AccountRef = {
