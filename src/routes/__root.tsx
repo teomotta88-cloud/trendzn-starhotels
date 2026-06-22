@@ -161,7 +161,7 @@ function Navbar() {
           <span className="inline-flex size-7 items-center justify-center rounded-md bg-primary font-display text-sm font-bold text-primary-foreground">
             T
           </span>
-          <span className="font-display text-base font-semibold tracking-tight">TRENDZN</span>
+          <span className="font-display text-base font-semibold tracking-tight">TRENDZN x STARHOTELS</span>
         </Link>
 
         {/* Desktop nav */}
