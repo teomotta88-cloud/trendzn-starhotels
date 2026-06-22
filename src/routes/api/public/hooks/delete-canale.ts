@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-const GITHUB_REPO = "teomotta88-cloud/trendzn";
+const GITHUB_REPO = "teomotta88-cloud/trendzn-starhotels";
 const TRENDS_PATH = "src/data/trends.json";
 
 export const Route = createFileRoute("/api/public/hooks/delete-canale")({

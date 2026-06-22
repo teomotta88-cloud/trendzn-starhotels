@@ -9,7 +9,7 @@ const SOCIAL_POST_REGEX =
 // Per canali inspo accettiamo anche URL di profilo
 const PROFILE_URL_REGEX = /https?:\/\/[^\s<>"']+/gi;
 
-const GITHUB_REPO = "teomotta88-cloud/trendzn";
+const GITHUB_REPO = "teomotta88-cloud/trendzn-starhotels";
 const TRENDS_PATH = "src/data/trends.json";
 
 const CATEGORY_MAP: Record<string, string> = {
