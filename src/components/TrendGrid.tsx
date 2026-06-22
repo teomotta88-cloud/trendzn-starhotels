@@ -178,8 +178,7 @@ export function TrendGrid({ items, dbIds = {}, onDelete, showScore = false }: Pr
                     <Trash2 className="size-3.5" />
                   </button>
                 )}
-                <SocialEmbed url={url} />
-                <div className="space-y-2 px-1 pb-2">
+                <div className="space-y-2 px-1">
                   <div className="flex flex-wrap items-center gap-2">
                     {item.category && (
                       <span className="inline-block rounded-full bg-primary/15 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">
@@ -188,16 +187,7 @@ export function TrendGrid({ items, dbIds = {}, onDelete, showScore = false }: Pr
                     )}
                     {showScore && typeof item.score === "number" && <StarRating score={item.score} />}
                   </div>
-                  <h3 className="font-display text-base font-semibold leading-snug text-foreground">
-                    {item.nome_trend ?? "—"}
-                  </h3>
-                  {item.descrizione && <p className="text-xs text-muted-foreground line-clamp-3">{item.descrizione}</p>}
-                  {item.applicazione && (
-                    <p className="text-xs text-foreground/80">
-                      <span className="text-muted-foreground">Applicazione:</span> {item.applicazione}
-                    </p>
-                  )}
-                  <div className="flex flex-wrap items-center gap-2 pt-1">
+                  <div className="flex flex-wrap items-center gap-2">
                     {item.industry && (
                       <span className="rounded-md border border-border px-2 py-0.5 text-[10px] text-muted-foreground">
                         {item.industry}
@@ -216,6 +206,18 @@ export function TrendGrid({ items, dbIds = {}, onDelete, showScore = false }: Pr
                       </a>
                     ))}
                   </div>
+                </div>
+                <SocialEmbed url={url} />
+                <div className="space-y-2 px-1 pb-2">
+                  <h3 className="font-display text-base font-semibold leading-snug text-foreground">
+                    {item.nome_trend ?? "—"}
+                  </h3>
+                  {item.descrizione && <p className="text-xs text-muted-foreground line-clamp-3">{item.descrizione}</p>}
+                  {item.applicazione && (
+                    <p className="text-xs text-foreground/80">
+                      <span className="text-muted-foreground">Applicazione:</span> {item.applicazione}
+                    </p>
+                  )}
                 </div>
               </article>
             );
