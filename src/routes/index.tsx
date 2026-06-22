@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { trendRealTime, trendAttuali, trendEvergreen, canaliInspo } from "@/lib/trends";
 import { ArrowRight, Zap, TrendingUp, Sparkles } from "lucide-react";
+import { TikTokTagEmbed } from "@/components/TikTokTagEmbed";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
