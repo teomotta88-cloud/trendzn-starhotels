@@ -6,9 +6,9 @@ export const Route = createFileRoute("/influencer-feed")({
 });
 
 const TRENDS_JSON_URL =
-  "https://api.github.com/repos/teomotta88-cloud/trendzn/contents/src/data/trends.json";
+  "https://api.github.com/repos/teomotta88-cloud/trendzn-starhotels/contents/src/data/trends.json";
 
-const N8N_WEBHOOK = "https://trendzn.app.n8n.cloud/webhook/trendzn-sync";
+const N8N_WEBHOOK = "https://trendzn.app.n8n.cloud/webhook/264eace9-2cae-47e8-8f49-e9a29d636bc2";
 
 interface Account {
   platform: string;
