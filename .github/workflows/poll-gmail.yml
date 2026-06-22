@@ -1,0 +1,17 @@
+name: Gmail Poller
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch: {}
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Poll Gmail e sincronizza il portale
+        run: |
+          curl -fsS -X POST "https://trendzn-starhotels.lovable.app/api/public/hooks/poll-gmail" \
+            -H "Content-Type: application/json" \
+            -o response.json
+          cat response.json
