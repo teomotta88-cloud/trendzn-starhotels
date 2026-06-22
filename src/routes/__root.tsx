@@ -150,6 +150,19 @@ const NAV_ITEMS = [
   { to: "/tiktok-hashtag", label: "TikTok Hashtag" },
 ];
 
+// Badge stile "storia Instagram": anello sottile + cerchio bianco con il
+// monogramma Starhotels. Placeholder in attesa del file logo ufficiale:
+// va sostituito con <img> quando l'asset reale è disponibile.
+function StarhotelsBadge() {
+  return (
+    <span className="inline-flex size-7 items-center justify-center rounded-full bg-gradient-to-tr from-primary via-accent to-primary p-[2px]">
+      <span className="flex size-full items-center justify-center rounded-full bg-card">
+        <span className="font-display text-[8px] font-bold leading-none tracking-tight text-primary">SH</span>
+      </span>
+    </span>
+  );
+}
+
 function Navbar() {
   const [open, setOpen] = useState(false);
 
@@ -162,6 +175,7 @@ function Navbar() {
             T
           </span>
           <span className="font-display text-base font-semibold tracking-tight">TRENDZN x STARHOTELS</span>
+          <StarhotelsBadge />
         </Link>
 
         {/* Desktop nav */}
