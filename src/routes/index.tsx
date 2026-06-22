@@ -22,39 +22,33 @@ function Index() {
   const cards = [
     {
       to: "/trend-real-time",
-      label: "Trend Real Time",
+      label: "Trend to Act",
       //count: trendRealTime.length,
       icon: Zap,
       blurb: "Da realizzare in 1–2 giorni. Velocità più che crafting.",
     },
     {
-      to: "/trend-evergreen",
-      label: "Trend Evergreen",
-      // count: trendEvergreen.length,
-      icon: Sparkles,
-      blurb: "Trend senza scadenza, sempre validi per qualsiasi brand.",
+      to: "/trend-attuale",
+      label: "Trend to Adapt",
+      //count: trendRealTime.length,
+      icon: Zap,
+      blurb: "Trend da adattare al proprio brand. Crafting più che velocità.",
     },
     {
-      to: "/canali-inspo",
-      label: "Canali Inspo",
-      // count: canaliInspo.length,
+      to: "/trend-evergreen",
+      label: "Cultural Formats",
+      // count: trendEvergreen.length,
       icon: Sparkles,
-      blurb: "Account e siti da tenere d'occhio per format, meme e RTM.",
+      blurb: "Trend senza scadenza, che possono diventare rubriche e format.",
     },
     {
       to: "/influencer",
-      label: "Influencer",
+      label: "Monitoring Creator/Influ",
       //count: influencer.length,
       icon: Sparkles,
-      blurb: "Influencer monitorati",
+      blurb: "Creator e Influencer da tenere d'occhio.",
     },
-    {
-      to: "/linkedin",
-      label: "Linkedin",
-      //count: linkedin.length,
-      icon: Sparkles,
-      blurb: "Ispirazioni dal mondo del marketing",
-    },
+
   ] as const;
 
   return (
