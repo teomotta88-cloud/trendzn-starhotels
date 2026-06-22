@@ -50,6 +50,7 @@ function Page() {
       .select("id, url, title, category, industry, tags")
       .eq("section", SECTION)
       .eq("status", "approved")
+      .order("posted_at", { ascending: false, nullsFirst: false })
       .order("created_at", { ascending: false })
       .range(from, to)
       .then(({ data }) => {
