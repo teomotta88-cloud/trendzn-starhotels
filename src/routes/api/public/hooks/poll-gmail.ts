@@ -374,13 +374,23 @@ export const Route = createFileRoute("/api/public/hooks/poll-gmail")({
     handlers: {
       POST: async () => {
         try {
+          const profile = (await gmailFetch(`/users/me/profile`)) as {
+            emailAddress?: string;
+          };
+
           const list = (await gmailFetch(
             `/users/me/messages?q=${encodeURIComponent("is:unread in:inbox")}&maxResults=50`,
-          )) as { messages?: { id: string }[] };
+          )) as { messages?: { id: string }[]; resultSizeEstimate?: number };
 
           const messages = list.messages ?? [];
           if (messages.length === 0) {
-            return Response.json({ ok: true, processed: 0, inserted: 0 });
+            return Response.json({
+              ok: true,
+              processed: 0,
+              inserted: 0,
+              account: profile.emailAddress ?? null,
+              resultSizeEstimate: list.resultSizeEstimate ?? 0,
+            });
           }
 
           const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
