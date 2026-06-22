@@ -12,6 +12,8 @@ const PROFILE_URL_REGEX = /https?:\/\/[^\s<>"']+/gi;
 const GITHUB_REPO = "teomotta88-cloud/trendzn-starhotels";
 const TRENDS_PATH = "src/data/trends.json";
 
+const TREND_SECTIONS = new Set(["trend-real-time", "trend-attuali", "trend-evergreen"]);
+
 const CATEGORY_MAP: Record<string, string> = {
   "trend real time": "Trend Real Time",
   "trend attuali": "Trend Attuali",
@@ -143,6 +145,7 @@ function parseSubject(subject: string): {
   category: string | null;
   industry: string | null;
   section: string | null;
+  score: number | null;
 } {
   const rawTags: string[] = [];
   const hasBrackets = /\[/.test(subject);
@@ -169,7 +172,16 @@ function parseSubject(subject: string): {
   const industry = industryRaw ? normalizeIndustry(industryRaw) : null;
   const tags = tagsLower;
 
-  return { tags, category, industry, section };
+  // Lo score (1-3) è il 4° tag dell'oggetto, solo per le sezioni Trend.
+  let score: number | null = null;
+  if (section && TREND_SECTIONS.has(section)) {
+    const scoreRaw = rawTags[3] ?? null;
+    if (scoreRaw && /^[1-3]$/.test(scoreRaw.trim())) {
+      score = parseInt(scoreRaw.trim(), 10);
+    }
+  }
+
+  return { tags, category, industry, section, score };
 }
 
 async function gmailFetch(path: string, init?: RequestInit) {
@@ -392,7 +404,7 @@ export const Route = createFileRoute("/api/public/hooks/poll-gmail")({
               const body = extractTextPlainOnly(msg.payload) || msg.snippet || "";
               const raw = `Subject: ${subject}\nFrom: ${from}\n\n${body}`;
 
-              const { tags, category, industry, section } = parseSubject(subject);
+              const { tags, category, industry, section, score } = parseSubject(subject);
 
               let urls: string[];
 
@@ -417,6 +429,7 @@ export const Route = createFileRoute("/api/public/hooks/poll-gmail")({
                   category: string | null;
                   industry: string | null;
                   section: string | null;
+                  score: number | null;
                   status: "approved";
                 }[] = [];
 
@@ -442,7 +455,9 @@ export const Route = createFileRoute("/api/public/hooks/poll-gmail")({
                         ? tags[2]
                           ? tags.slice(2).join(" ")
                           : subject || null
-                        : subject || null;
+                        : TREND_SECTIONS.has(section ?? "") && tags[2]
+                          ? tags[2]
+                          : subject || null;
 
                   rows.push({
                     url,
@@ -453,6 +468,7 @@ export const Route = createFileRoute("/api/public/hooks/poll-gmail")({
                     category,
                     industry,
                     section,
+                    score,
                     status: "approved",
                   });
                 }
