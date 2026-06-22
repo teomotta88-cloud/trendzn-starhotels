@@ -83,22 +83,9 @@ function Index() {
       </section>
 
       <section className="flex justify-center">
-        <blockquote
-          className="tiktok-embed"
-          cite="https://www.tiktok.com/tag/starhotels"
-          data-tag-id="starhotels"
-          data-embed-from="embed_page"
-          data-embed-type="tag"
-          style={{ maxWidth: 780, minWidth: 288 }}
-        >
-          <section>
-            <a target="_blank" rel="noreferrer" href="https://www.tiktok.com/tag/starhotels?refer=hashtag_embed">
-              #starhotels
-            </a>
-          </section>
-        </blockquote>
-        <script async src="https://www.tiktok.com/embed.js" />
+        <TikTokTagEmbed />
       </section>
+
 
       <section className="grid grid-cols-1 gap-5 md:grid-cols-3">
         {cards.map((c) => (
