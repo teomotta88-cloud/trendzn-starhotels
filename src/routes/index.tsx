@@ -28,13 +28,6 @@ function Index() {
       blurb: "Da realizzare in 1–2 giorni. Velocità più che crafting.",
     },
     {
-      to: "/trend-attuali",
-      label: "Trend Attuali",
-      //count: trendAttuali.length,
-      icon: TrendingUp,
-      blurb: "Trend social di IG/TikTok con durata 1–2 settimane.",
-    },
-    {
       to: "/trend-evergreen",
       label: "Trend Evergreen",
       // count: trendEvergreen.length,
