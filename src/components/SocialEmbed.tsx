@@ -154,13 +154,17 @@ export function SocialEmbed({ url }: { url: string }) {
     );
   }
 
-  const aspect = platform === "youtube" ? "aspect-video" : "aspect-[9/16]";
+  // Il player embed v2 di TikTok ha un rapporto nativo ~325x739 (non 9:16):
+  // usare 9:16 lo fa ritagliare e mostra una scrollbar interna.
+  const aspect =
+    platform === "youtube" ? "aspect-video" : platform === "tiktok" ? "aspect-[325/739]" : "aspect-[9/16]";
 
   return (
     <div className={`relative ${aspect} w-full overflow-hidden rounded-xl border border-border bg-black`}>
       <iframe
         src={embed}
         className="absolute inset-0 size-full"
+        scrolling="no"
         allow="autoplay; encrypted-media; picture-in-picture; web-share"
         allowFullScreen
         loading="lazy"
