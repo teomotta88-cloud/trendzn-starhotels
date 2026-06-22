@@ -2,5 +2,20 @@
   "trend_real_time": [],
   "trend_attuali": [],
   "trend_evergreen": [],
-  "canali_inspo": []
+  "canali_inspo": [
+    {
+      "id": "starhotels",
+      "name": "Profilo ufficiale Starhotels",
+      "urls": ["https://www.instagram.com/starhotels"],
+      "descrizione": "Profilo Instagram ufficiale Starhotels",
+      "accounts": [
+        {
+          "platform": "instagram",
+          "handle": "starhotels",
+          "url": "https://www.instagram.com/starhotels"
+        }
+      ]
+    }
+  ],
+  "influencer_profiles": []
 }
