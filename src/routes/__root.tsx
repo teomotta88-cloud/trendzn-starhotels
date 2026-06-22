@@ -184,7 +184,7 @@ function Navbar() {
               key={it.to}
               to={it.to}
               activeOptions={{ exact: it.to === "/" }}
-              className="rounded-md px-3 py-1.5 text-sm text-muted-foreground transition hover:text-foreground data-[status=active]:bg-secondary data-[status=active]:text-foreground"
+              className="rounded-md px-3 py-1.5 text-sm text-muted-foreground transition hover:text-foreground data-[status=active]:bg-secondary data-[status=active]:text-secondary-foreground"
             >
               {it.label}
             </Link>
@@ -211,7 +211,7 @@ function Navbar() {
                 to={it.to}
                 activeOptions={{ exact: it.to === "/" }}
                 onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-2.5 text-sm text-muted-foreground transition hover:bg-secondary hover:text-foreground data-[status=active]:bg-secondary data-[status=active]:text-foreground"
+                className="rounded-md px-3 py-2.5 text-sm text-muted-foreground transition hover:bg-secondary hover:text-secondary-foreground data-[status=active]:bg-secondary data-[status=active]:text-secondary-foreground"
               >
                 {it.label}
               </Link>
