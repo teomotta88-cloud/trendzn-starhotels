@@ -460,7 +460,7 @@ export const Route = createFileRoute("/api/public/hooks/poll-gmail")({
                   const base = urlBase(url);
                   const { data: existing } = await supabaseAdmin
                     .from("trend_submissions")
-                    .select("id, section, category")
+                    .select("id, section, category, score, title")
                     .like("url", `${base}%`)
                     .maybeSingle();
 
@@ -469,7 +469,18 @@ export const Route = createFileRoute("/api/public/hooks/poll-gmail")({
                     // (es. arrivato da una mail con tag errati nell'oggetto), la
                     // mail corrente potrebbe portare i tag corretti: aggiorniamo
                     // la riga invece di scartarla, così il trend non resta "perso".
-                    if (!existing.section && section) {
+                    // Stesso discorso se lo score manca o se il titolo salvato è
+                    // in realtà solo la cifra dello score (1-3): vuol dire che una
+                    // mail precedente mal formattata aveva messo lo score al posto
+                    // del titolo — una mail successiva con i tag corretti deve poter
+                    // sistemare la riga.
+                    const titleLooksLikeScore = !!existing.title && /^[1-3]$/.test(existing.title.trim());
+                    const needsRecovery =
+                      (!existing.section && !!section) ||
+                      (TREND_SECTIONS.has(existing.section ?? "") &&
+                        (existing.score == null || titleLooksLikeScore) &&
+                        score != null);
+                    if (needsRecovery) {
                       const derivedTitleUpdate =
                         section === "canali-inspo" || section === "influencer"
                           ? tags[2]
