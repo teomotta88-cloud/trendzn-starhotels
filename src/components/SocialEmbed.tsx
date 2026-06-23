@@ -140,7 +140,7 @@ function TikTokEmbed({ embed }: { embed: string }) {
   return (
     <div
       ref={containerRef}
-      className="relative aspect-[9/16] w-full overflow-hidden rounded-xl border border-border bg-black"
+      className="relative mx-auto aspect-[9/16] w-full max-w-[260px] overflow-hidden rounded-xl border border-border bg-black"
     >
       <iframe
         src={embed}
