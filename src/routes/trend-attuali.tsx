@@ -26,7 +26,7 @@ type DbRow = {
 
 function rowToTrendItem(row: DbRow): TrendItem {
   return {
-    category: row.category ?? "Trend Attuali",
+    category: row.category ?? "Trend to Adapt",
     links: [row.url],
     descrizione: null,
     nome_trend: row.title ?? null,
@@ -72,8 +72,8 @@ function Page() {
         <div className="space-y-2">
           <h1 className="font-display text-3xl font-bold sm:text-4xl">Trend Attuali</h1>
           <p className="max-w-2xl text-sm text-muted-foreground">
-            Da realizzare entro 1-2 settimane. Trend social (TT o IG) con durata un po' più lunga.{"\n"}
-            Possono essere sia light shooting sia post "normali" (card, carousel).
+            Da realizzare entro 2-4 settimane. Trend social (TT o IG) con durata un po' più lunga.{"\n"}
+            Reinterpretabili e adattabili al Tone of Voice e all'identity del brand.
           </p>
         </div>
         <ManualSubmitDialog section="trend-attuali" onSuccess={fetchRows} />
