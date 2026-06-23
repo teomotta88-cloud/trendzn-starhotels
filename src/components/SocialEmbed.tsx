@@ -154,6 +154,25 @@ export function SocialEmbed({ url }: { url: string }) {
     );
   }
 
+  // Il player embed v2 di TikTok ha una larghezza nativa fissa (~325px) e non
+  // si adatta al contenitore: per renderlo più leggibile lo ingrandiamo con
+  // una transform scale (l'iframe è cross-origin, quindi non possiamo agire
+  // sul suo layout interno, solo sulla sua resa visiva) e allarghiamo il box
+  // contenitore di conseguenza.
+  if (platform === "tiktok") {
+    return (
+      <div className="relative mx-auto h-[640px] w-full max-w-[460px] overflow-y-auto overflow-x-hidden rounded-xl border border-border bg-black">
+        <iframe
+          src={embed}
+          className="h-[760px] w-[325px] origin-top-left scale-[1.4]"
+          allow="autoplay; encrypted-media; picture-in-picture; web-share"
+          allowFullScreen
+          loading="lazy"
+        />
+      </div>
+    );
+  }
+
   const aspect = platform === "youtube" ? "aspect-video" : "aspect-[9/16]";
 
   return (
