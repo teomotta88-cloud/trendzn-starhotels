@@ -174,8 +174,10 @@ function Navbar() {
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2" onClick={() => setOpen(false)}>
           <img src="/brand/logo-full-v2.png" alt="TRENDZN" className="h-7 w-auto" />
-          <span className="font-display text-base font-semibold tracking-tight">x STARHOTELS</span>
-          <StarhotelsBadge />
+          <div className="flex items-center gap-2 -translate-y-[3px]">
+            <span className="font-display text-base font-semibold tracking-tight">x STARHOTELS</span>
+            <StarhotelsBadge />
+          </div>
         </Link>
 
         {/* Desktop nav */}
