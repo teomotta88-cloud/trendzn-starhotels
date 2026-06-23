@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { detectPlatform, embedUrl } from "@/lib/trends";
 import { ExternalLink, Instagram, Music2, Youtube, Globe, Linkedin } from "lucide-react";
 
@@ -109,6 +109,49 @@ function LinkedInPreview({ url }: { url: string }) {
   );
 }
 
+// Larghezza/altezza native del player embed v2 di TikTok: non si adattano
+// al contenitore (l'iframe è cross-origin, non possiamo cambiarne il layout
+// interno), quindi calcoliamo lo scale in base alla larghezza reale della
+// card per riempirla sempre per intero, indipendentemente dal breakpoint.
+const TIKTOK_NATIVE_WIDTH = 325;
+const TIKTOK_NATIVE_HEIGHT = 738;
+
+function TikTokEmbed({ embed }: { embed: string }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const update = () => setScale(el.clientWidth / TIKTOK_NATIVE_WIDTH);
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      className="relative w-full overflow-hidden rounded-xl border border-border bg-black"
+      style={{ height: TIKTOK_NATIVE_HEIGHT * scale }}
+    >
+      <iframe
+        src={embed}
+        style={{
+          width: TIKTOK_NATIVE_WIDTH,
+          height: TIKTOK_NATIVE_HEIGHT,
+          transform: `scale(${scale})`,
+          transformOrigin: "top left",
+        }}
+        allow="autoplay; encrypted-media; picture-in-picture; web-share"
+        allowFullScreen
+        loading="lazy"
+      />
+    </div>
+  );
+}
+
 export function SocialEmbed({ url }: { url: string }) {
   const platform = detectPlatform(url);
   const embed = embedUrl(url);
@@ -154,25 +197,8 @@ export function SocialEmbed({ url }: { url: string }) {
     );
   }
 
-  // Il player embed v2 di TikTok ha una larghezza nativa fissa (~325px) e non
-  // si adatta al contenitore: per renderlo più leggibile lo ingrandiamo con
-  // una transform scale (l'iframe è cross-origin, quindi non possiamo agire
-  // sul suo layout interno, solo sulla sua resa visiva) e allarghiamo il box
-  // contenitore di conseguenza. Mostra anche la caption sotto il video, oltre
-  // la viewport visibile: usiamo un box più alto con scroll interno, perché
-  // lo scroll nativo dell'iframe non è controllabile da qui.
   if (platform === "tiktok") {
-    return (
-      <div className="relative mx-auto h-[640px] w-full max-w-[460px] overflow-y-auto overflow-x-hidden rounded-xl border border-border bg-black">
-        <iframe
-          src={embed}
-          className="h-[760px] w-[325px] origin-top-left scale-[1.4]"
-          allow="autoplay; encrypted-media; picture-in-picture; web-share"
-          allowFullScreen
-          loading="lazy"
-        />
-      </div>
-    );
+    return <TikTokEmbed embed={embed} />;
   }
 
   const aspect = platform === "youtube" ? "aspect-video" : "aspect-[9/16]";
