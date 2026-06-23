@@ -26,7 +26,7 @@ type DbRow = {
 
 function rowToTrendItem(row: DbRow): TrendItem {
   return {
-    category: row.category ?? "Trend Evergreen",
+    category: row.category ?? "Cultural Formats",
     links: [row.url],
     descrizione: null,
     nome_trend: row.title ?? null,
@@ -72,8 +72,7 @@ function Page() {
         <div className="space-y-2">
           <h1 className="font-display text-3xl font-bold sm:text-4xl">Trend Evergreen</h1>
           <p className="max-w-2xl text-sm text-muted-foreground">
-            Vanno bene un po' sempre. Linguaggi e costrutti social sempre validi (POV, dimmi senza dirmi…).{"\n"}
-            Utili come tappabuchi quando si è a corto di idee.
+            Contenuti duraturi che oggi sono diventati parte di un vero e proprio linguaggio dei social e che possono evolvere in rubriche, format editoriali e nuovi territori di comunicazione.
           </p>
         </div>
         <ManualSubmitDialog section="trend-evergreen" onSuccess={fetchRows} />
