@@ -70,7 +70,7 @@ function Page() {
     <div className="space-y-8">
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div className="space-y-2">
-          <h1 className="font-display text-3xl font-bold sm:text-4xl">Trend Real Time</h1>
+          <h1 className="font-display text-3xl font-bold sm:text-4xl">Trend to Act</h1>
           <p className="max-w-2xl text-sm text-muted-foreground">
             Trend in forte accelerazione che richiedono un'attivazione immediata. Da realizzare entro 1-2 giorni.{"\n"}
             Conta più la velocità di realizzazione che il crafting minuzioso.
