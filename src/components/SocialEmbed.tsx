@@ -111,8 +111,11 @@ function LinkedInPreview({ url }: { url: string }) {
 
 // Larghezza/altezza native del player embed v2 di TikTok: non si adattano
 // al contenitore (l'iframe è cross-origin, non possiamo cambiarne il layout
-// interno), quindi calcoliamo lo scale in base alla larghezza reale della
-// card per riempirla sempre per intero, indipendentemente dal breakpoint.
+// interno). Il rapporto nativo (325:738) è più "alto" del 9:16 standard delle
+// altre card, quindi non possiamo semplicemente riempire la larghezza senza
+// tagliare il video in verticale: calcoliamo lo scale come il minimo tra
+// quello orizzontale e verticale (object-fit: contain), centrando il player
+// nel box, così il post resta sempre visibile per intero.
 const TIKTOK_NATIVE_WIDTH = 325;
 const TIKTOK_NATIVE_HEIGHT = 738;
 
@@ -123,7 +126,11 @@ function TikTokEmbed({ embed }: { embed: string }) {
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
-    const update = () => setScale(el.clientWidth / TIKTOK_NATIVE_WIDTH);
+    const update = () => {
+      const scaleX = el.clientWidth / TIKTOK_NATIVE_WIDTH;
+      const scaleY = el.clientHeight / TIKTOK_NATIVE_HEIGHT;
+      setScale(Math.min(scaleX, scaleY));
+    };
     update();
     const observer = new ResizeObserver(update);
     observer.observe(el);
@@ -133,16 +140,18 @@ function TikTokEmbed({ embed }: { embed: string }) {
   return (
     <div
       ref={containerRef}
-      className="relative w-full overflow-hidden rounded-xl border border-border bg-black"
-      style={{ height: TIKTOK_NATIVE_HEIGHT * scale }}
+      className="relative aspect-[9/16] w-full overflow-hidden rounded-xl border border-border bg-black"
     >
       <iframe
         src={embed}
         style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
           width: TIKTOK_NATIVE_WIDTH,
           height: TIKTOK_NATIVE_HEIGHT,
-          transform: `scale(${scale})`,
-          transformOrigin: "top left",
+          transform: `translate(-50%, -50%) scale(${scale})`,
+          transformOrigin: "center",
         }}
         allow="autoplay; encrypted-media; picture-in-picture; web-share"
         allowFullScreen
