@@ -11,7 +11,7 @@ export const Route = createFileRoute("/influencer/")({
       { title: "Influencer — Trendzn" },
       {
         name: "description",
-        content: "Profili influencer monitorati, organizzati per cliente.",
+        content: "Profili influencer monitorati automaticamente, organizzati per cliente.",
       },
     ],
   }),

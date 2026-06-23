@@ -2,24 +2,48 @@ import { useMemo, useState } from "react";
 import type { TrendItem } from "@/lib/trends";
 import { detectPlatform } from "@/lib/trends";
 import { SocialEmbed, PlatformIcon } from "./SocialEmbed";
-import { Search, X, Trash2 } from "lucide-react";
+import { Search, X, Trash2, Star } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 type Props = {
   items: TrendItem[];
   dbIds?: Record<string, string>; // url → supabase id
   onDelete?: (url: string) => void;
+  showScore?: boolean;
 };
+
+type SortKey = "date-desc" | "date-asc" | "score-desc" | "score-asc";
+
+const SCORE_LEGEND: { score: number; text: string }[] = [
+  { score: 1, text: "Trend virale, ma da valutare se adattare al brand" },
+  { score: 2, text: "Trend del settore travel, adattabile al brand" },
+  { score: 3, text: "Trend 100% affine al brand, da non perdere" },
+];
 
 function unique(values: (string | null | undefined)[]) {
   return Array.from(new Set(values.filter((v): v is string => !!v && v.trim().length > 0))).sort();
 }
 
-export function TrendGrid({ items, dbIds = {}, onDelete }: Props) {
+function StarRating({ score }: { score: number }) {
+  return (
+    <div className="flex items-center gap-0.5" title={`Score ${score}/3`}>
+      {Array.from({ length: 3 }).map((_, i) => (
+        <Star
+          key={i}
+          className={`size-3.5 ${i < score ? "fill-primary text-primary" : "text-muted-foreground/30"}`}
+        />
+      ))}
+    </div>
+  );
+}
+
+export function TrendGrid({ items, dbIds = {}, onDelete, showScore = false }: Props) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<string>("");
   const [industry, setIndustry] = useState<string>("");
   const [platform, setPlatform] = useState<string>("");
+  const [scoreFilter, setScoreFilter] = useState<string>("");
+  const [sort, setSort] = useState<SortKey>("date-desc");
   const [deleting, setDeleting] = useState<string | null>(null);
 
   const categories = useMemo(() => unique(items.map((i) => i.category)), [items]);
@@ -30,6 +54,7 @@ export function TrendGrid({ items, dbIds = {}, onDelete }: Props) {
     if (category && i.category !== category) return false;
     if (industry && i.industry !== industry) return false;
     if (platform && !i.links.some((l) => detectPlatform(l) === platform)) return false;
+    if (scoreFilter && String(i.score ?? "") !== scoreFilter) return false;
     if (query) {
       const hay = [i.nome_trend, i.descrizione, i.applicazione, i.canali, i.industry]
         .filter(Boolean)
@@ -40,7 +65,25 @@ export function TrendGrid({ items, dbIds = {}, onDelete }: Props) {
     return true;
   });
 
-  const hasFilters = !!(query || category || industry || platform);
+  const sorted = useMemo(() => {
+    const arr = [...filtered];
+    arr.sort((a, b) => {
+      switch (sort) {
+        case "score-desc":
+          return (b.score ?? 0) - (a.score ?? 0);
+        case "score-asc":
+          return (a.score ?? 0) - (b.score ?? 0);
+        case "date-asc":
+          return (a.createdAt ?? "").localeCompare(b.createdAt ?? "");
+        case "date-desc":
+        default:
+          return (b.createdAt ?? "").localeCompare(a.createdAt ?? "");
+      }
+    });
+    return arr;
+  }, [filtered, sort]);
+
+  const hasFilters = !!(query || category || industry || platform || scoreFilter);
 
   async function handleDelete(url: string) {
     const id = dbIds[url];
@@ -54,6 +97,20 @@ export function TrendGrid({ items, dbIds = {}, onDelete }: Props) {
 
   return (
     <div className="space-y-6">
+      {showScore && (
+        <div className="rounded-2xl border border-border bg-card/50 p-4 backdrop-blur">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Legenda Score</p>
+          <div className="flex flex-col gap-1.5 sm:flex-row sm:flex-wrap sm:gap-6">
+            {SCORE_LEGEND.map(({ score, text }) => (
+              <div key={score} className="flex items-center gap-2 text-xs text-muted-foreground">
+                <StarRating score={score} />
+                <span>{text}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-border bg-card/50 p-4 backdrop-blur">
         <div className="relative flex-1 min-w-[220px]">
           <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -67,6 +124,17 @@ export function TrendGrid({ items, dbIds = {}, onDelete }: Props) {
         <Select label="Categoria" value={category} onChange={setCategory} options={categories} />
         <Select label="Industry" value={industry} onChange={setIndustry} options={industries} />
         <Select label="Piattaforma" value={platform} onChange={setPlatform} options={platforms} />
+        {showScore && <Select label="Score" value={scoreFilter} onChange={setScoreFilter} options={["1", "2", "3"]} />}
+        <select
+          value={sort}
+          onChange={(e) => setSort(e.target.value as SortKey)}
+          className="rounded-lg border border-border bg-background/60 px-3 py-2 text-sm outline-none focus:border-primary"
+        >
+          <option value="date-desc">Data: più recenti</option>
+          <option value="date-asc">Data: meno recenti</option>
+          {showScore && <option value="score-desc">Score: più alto</option>}
+          {showScore && <option value="score-asc">Score: più basso</option>}
+        </select>
         {hasFilters && (
           <button
             onClick={() => {
@@ -74,6 +142,7 @@ export function TrendGrid({ items, dbIds = {}, onDelete }: Props) {
               setCategory("");
               setIndustry("");
               setPlatform("");
+              setScoreFilter("");
             }}
             className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-2 text-xs text-muted-foreground hover:text-foreground"
           >
@@ -85,13 +154,13 @@ export function TrendGrid({ items, dbIds = {}, onDelete }: Props) {
         </span>
       </div>
 
-      {filtered.length === 0 ? (
+      {sorted.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-border p-12 text-center text-sm text-muted-foreground">
           Nessun trend trovato con i filtri selezionati.
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-          {filtered.map((item, idx) => {
+          {sorted.map((item, idx) => {
             const url = item.links[0];
             const isDb = !!dbIds[url];
             return (
@@ -109,23 +178,16 @@ export function TrendGrid({ items, dbIds = {}, onDelete }: Props) {
                     <Trash2 className="size-3.5" />
                   </button>
                 )}
-                <SocialEmbed url={url} />
-                <div className="space-y-2 px-1 pb-2">
-                  {item.category && (
-                    <span className="inline-block rounded-full bg-primary/15 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">
-                      {item.category}
-                    </span>
-                  )}
-                  <h3 className="font-display text-base font-semibold leading-snug text-foreground">
-                    {item.nome_trend ?? "—"}
-                  </h3>
-                  {item.descrizione && <p className="text-xs text-muted-foreground line-clamp-3">{item.descrizione}</p>}
-                  {item.applicazione && (
-                    <p className="text-xs text-foreground/80">
-                      <span className="text-muted-foreground">Applicazione:</span> {item.applicazione}
-                    </p>
-                  )}
-                  <div className="flex flex-wrap items-center gap-2 pt-1">
+                <div className="space-y-2 px-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    {item.category && (
+                      <span className="inline-block rounded-full bg-primary/15 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">
+                        {item.category}
+                      </span>
+                    )}
+                    {showScore && typeof item.score === "number" && <StarRating score={item.score} />}
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2">
                     {item.industry && (
                       <span className="rounded-md border border-border px-2 py-0.5 text-[10px] text-muted-foreground">
                         {item.industry}
@@ -144,6 +206,18 @@ export function TrendGrid({ items, dbIds = {}, onDelete }: Props) {
                       </a>
                     ))}
                   </div>
+                </div>
+                <SocialEmbed url={url} />
+                <div className="space-y-2 px-1 pb-2">
+                  <h3 className="font-display text-base font-semibold leading-snug text-foreground">
+                    {item.nome_trend ?? "—"}
+                  </h3>
+                  {item.descrizione && <p className="text-xs text-muted-foreground line-clamp-3">{item.descrizione}</p>}
+                  {item.applicazione && (
+                    <p className="text-xs text-foreground/80">
+                      <span className="text-muted-foreground">Applicazione:</span> {item.applicazione}
+                    </p>
+                  )}
                 </div>
               </article>
             );

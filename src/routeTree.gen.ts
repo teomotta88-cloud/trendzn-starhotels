@@ -9,38 +9,296 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TrendRealTimeRouteImport } from './routes/trend-real-time'
+import { Route as TrendEvergreenRouteImport } from './routes/trend-evergreen'
+import { Route as TrendAttualiRouteImport } from './routes/trend-attuali'
+import { Route as TiktokHashtagRouteImport } from './routes/tiktok-hashtag'
+import { Route as LinkedinRouteImport } from './routes/linkedin'
+import { Route as InfluencerFeedRouteImport } from './routes/influencer-feed'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as InfluencerIndexRouteImport } from './routes/influencer.index'
+import { Route as FeedIndexRouteImport } from './routes/feed.index'
+import { Route as CanaliInspoIndexRouteImport } from './routes/canali-inspo.index'
+import { Route as InfluencerIdRouteImport } from './routes/influencer.$id'
+import { Route as CanaliInspoIdRouteImport } from './routes/canali-inspo.$id'
+import { Route as ApiPublicHooksSyncTiktokHashtagRouteImport } from './routes/api/public/hooks/sync-tiktok-hashtag'
+import { Route as ApiPublicHooksSubmitManualRouteImport } from './routes/api/public/hooks/submit-manual'
+import { Route as ApiPublicHooksPollGmailRouteImport } from './routes/api/public/hooks/poll-gmail'
+import { Route as ApiPublicHooksLinkPreviewRouteImport } from './routes/api/public/hooks/link-preview'
+import { Route as ApiPublicHooksDeleteCanaleRouteImport } from './routes/api/public/hooks/delete-canale'
 
+const TrendRealTimeRoute = TrendRealTimeRouteImport.update({
+  id: '/trend-real-time',
+  path: '/trend-real-time',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TrendEvergreenRoute = TrendEvergreenRouteImport.update({
+  id: '/trend-evergreen',
+  path: '/trend-evergreen',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TrendAttualiRoute = TrendAttualiRouteImport.update({
+  id: '/trend-attuali',
+  path: '/trend-attuali',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TiktokHashtagRoute = TiktokHashtagRouteImport.update({
+  id: '/tiktok-hashtag',
+  path: '/tiktok-hashtag',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LinkedinRoute = LinkedinRouteImport.update({
+  id: '/linkedin',
+  path: '/linkedin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InfluencerFeedRoute = InfluencerFeedRouteImport.update({
+  id: '/influencer-feed',
+  path: '/influencer-feed',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InfluencerIndexRoute = InfluencerIndexRouteImport.update({
+  id: '/influencer/',
+  path: '/influencer/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FeedIndexRoute = FeedIndexRouteImport.update({
+  id: '/feed/',
+  path: '/feed/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CanaliInspoIndexRoute = CanaliInspoIndexRouteImport.update({
+  id: '/canali-inspo/',
+  path: '/canali-inspo/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InfluencerIdRoute = InfluencerIdRouteImport.update({
+  id: '/influencer/$id',
+  path: '/influencer/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CanaliInspoIdRoute = CanaliInspoIdRouteImport.update({
+  id: '/canali-inspo/$id',
+  path: '/canali-inspo/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicHooksSyncTiktokHashtagRoute =
+  ApiPublicHooksSyncTiktokHashtagRouteImport.update({
+    id: '/api/public/hooks/sync-tiktok-hashtag',
+    path: '/api/public/hooks/sync-tiktok-hashtag',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicHooksSubmitManualRoute =
+  ApiPublicHooksSubmitManualRouteImport.update({
+    id: '/api/public/hooks/submit-manual',
+    path: '/api/public/hooks/submit-manual',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicHooksPollGmailRoute = ApiPublicHooksPollGmailRouteImport.update({
+  id: '/api/public/hooks/poll-gmail',
+  path: '/api/public/hooks/poll-gmail',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicHooksLinkPreviewRoute =
+  ApiPublicHooksLinkPreviewRouteImport.update({
+    id: '/api/public/hooks/link-preview',
+    path: '/api/public/hooks/link-preview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicHooksDeleteCanaleRoute =
+  ApiPublicHooksDeleteCanaleRouteImport.update({
+    id: '/api/public/hooks/delete-canale',
+    path: '/api/public/hooks/delete-canale',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/influencer-feed': typeof InfluencerFeedRoute
+  '/linkedin': typeof LinkedinRoute
+  '/tiktok-hashtag': typeof TiktokHashtagRoute
+  '/trend-attuali': typeof TrendAttualiRoute
+  '/trend-evergreen': typeof TrendEvergreenRoute
+  '/trend-real-time': typeof TrendRealTimeRoute
+  '/canali-inspo/$id': typeof CanaliInspoIdRoute
+  '/influencer/$id': typeof InfluencerIdRoute
+  '/canali-inspo/': typeof CanaliInspoIndexRoute
+  '/feed/': typeof FeedIndexRoute
+  '/influencer/': typeof InfluencerIndexRoute
+  '/api/public/hooks/delete-canale': typeof ApiPublicHooksDeleteCanaleRoute
+  '/api/public/hooks/link-preview': typeof ApiPublicHooksLinkPreviewRoute
+  '/api/public/hooks/poll-gmail': typeof ApiPublicHooksPollGmailRoute
+  '/api/public/hooks/submit-manual': typeof ApiPublicHooksSubmitManualRoute
+  '/api/public/hooks/sync-tiktok-hashtag': typeof ApiPublicHooksSyncTiktokHashtagRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/influencer-feed': typeof InfluencerFeedRoute
+  '/linkedin': typeof LinkedinRoute
+  '/tiktok-hashtag': typeof TiktokHashtagRoute
+  '/trend-attuali': typeof TrendAttualiRoute
+  '/trend-evergreen': typeof TrendEvergreenRoute
+  '/trend-real-time': typeof TrendRealTimeRoute
+  '/canali-inspo/$id': typeof CanaliInspoIdRoute
+  '/influencer/$id': typeof InfluencerIdRoute
+  '/canali-inspo': typeof CanaliInspoIndexRoute
+  '/feed': typeof FeedIndexRoute
+  '/influencer': typeof InfluencerIndexRoute
+  '/api/public/hooks/delete-canale': typeof ApiPublicHooksDeleteCanaleRoute
+  '/api/public/hooks/link-preview': typeof ApiPublicHooksLinkPreviewRoute
+  '/api/public/hooks/poll-gmail': typeof ApiPublicHooksPollGmailRoute
+  '/api/public/hooks/submit-manual': typeof ApiPublicHooksSubmitManualRoute
+  '/api/public/hooks/sync-tiktok-hashtag': typeof ApiPublicHooksSyncTiktokHashtagRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/influencer-feed': typeof InfluencerFeedRoute
+  '/linkedin': typeof LinkedinRoute
+  '/tiktok-hashtag': typeof TiktokHashtagRoute
+  '/trend-attuali': typeof TrendAttualiRoute
+  '/trend-evergreen': typeof TrendEvergreenRoute
+  '/trend-real-time': typeof TrendRealTimeRoute
+  '/canali-inspo/$id': typeof CanaliInspoIdRoute
+  '/influencer/$id': typeof InfluencerIdRoute
+  '/canali-inspo/': typeof CanaliInspoIndexRoute
+  '/feed/': typeof FeedIndexRoute
+  '/influencer/': typeof InfluencerIndexRoute
+  '/api/public/hooks/delete-canale': typeof ApiPublicHooksDeleteCanaleRoute
+  '/api/public/hooks/link-preview': typeof ApiPublicHooksLinkPreviewRoute
+  '/api/public/hooks/poll-gmail': typeof ApiPublicHooksPollGmailRoute
+  '/api/public/hooks/submit-manual': typeof ApiPublicHooksSubmitManualRoute
+  '/api/public/hooks/sync-tiktok-hashtag': typeof ApiPublicHooksSyncTiktokHashtagRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/influencer-feed'
+    | '/linkedin'
+    | '/tiktok-hashtag'
+    | '/trend-attuali'
+    | '/trend-evergreen'
+    | '/trend-real-time'
+    | '/canali-inspo/$id'
+    | '/influencer/$id'
+    | '/canali-inspo/'
+    | '/feed/'
+    | '/influencer/'
+    | '/api/public/hooks/delete-canale'
+    | '/api/public/hooks/link-preview'
+    | '/api/public/hooks/poll-gmail'
+    | '/api/public/hooks/submit-manual'
+    | '/api/public/hooks/sync-tiktok-hashtag'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/influencer-feed'
+    | '/linkedin'
+    | '/tiktok-hashtag'
+    | '/trend-attuali'
+    | '/trend-evergreen'
+    | '/trend-real-time'
+    | '/canali-inspo/$id'
+    | '/influencer/$id'
+    | '/canali-inspo'
+    | '/feed'
+    | '/influencer'
+    | '/api/public/hooks/delete-canale'
+    | '/api/public/hooks/link-preview'
+    | '/api/public/hooks/poll-gmail'
+    | '/api/public/hooks/submit-manual'
+    | '/api/public/hooks/sync-tiktok-hashtag'
+  id:
+    | '__root__'
+    | '/'
+    | '/influencer-feed'
+    | '/linkedin'
+    | '/tiktok-hashtag'
+    | '/trend-attuali'
+    | '/trend-evergreen'
+    | '/trend-real-time'
+    | '/canali-inspo/$id'
+    | '/influencer/$id'
+    | '/canali-inspo/'
+    | '/feed/'
+    | '/influencer/'
+    | '/api/public/hooks/delete-canale'
+    | '/api/public/hooks/link-preview'
+    | '/api/public/hooks/poll-gmail'
+    | '/api/public/hooks/submit-manual'
+    | '/api/public/hooks/sync-tiktok-hashtag'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  InfluencerFeedRoute: typeof InfluencerFeedRoute
+  LinkedinRoute: typeof LinkedinRoute
+  TiktokHashtagRoute: typeof TiktokHashtagRoute
+  TrendAttualiRoute: typeof TrendAttualiRoute
+  TrendEvergreenRoute: typeof TrendEvergreenRoute
+  TrendRealTimeRoute: typeof TrendRealTimeRoute
+  CanaliInspoIdRoute: typeof CanaliInspoIdRoute
+  InfluencerIdRoute: typeof InfluencerIdRoute
+  CanaliInspoIndexRoute: typeof CanaliInspoIndexRoute
+  FeedIndexRoute: typeof FeedIndexRoute
+  InfluencerIndexRoute: typeof InfluencerIndexRoute
+  ApiPublicHooksDeleteCanaleRoute: typeof ApiPublicHooksDeleteCanaleRoute
+  ApiPublicHooksLinkPreviewRoute: typeof ApiPublicHooksLinkPreviewRoute
+  ApiPublicHooksPollGmailRoute: typeof ApiPublicHooksPollGmailRoute
+  ApiPublicHooksSubmitManualRoute: typeof ApiPublicHooksSubmitManualRoute
+  ApiPublicHooksSyncTiktokHashtagRoute: typeof ApiPublicHooksSyncTiktokHashtagRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/trend-real-time': {
+      id: '/trend-real-time'
+      path: '/trend-real-time'
+      fullPath: '/trend-real-time'
+      preLoaderRoute: typeof TrendRealTimeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trend-evergreen': {
+      id: '/trend-evergreen'
+      path: '/trend-evergreen'
+      fullPath: '/trend-evergreen'
+      preLoaderRoute: typeof TrendEvergreenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trend-attuali': {
+      id: '/trend-attuali'
+      path: '/trend-attuali'
+      fullPath: '/trend-attuali'
+      preLoaderRoute: typeof TrendAttualiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tiktok-hashtag': {
+      id: '/tiktok-hashtag'
+      path: '/tiktok-hashtag'
+      fullPath: '/tiktok-hashtag'
+      preLoaderRoute: typeof TiktokHashtagRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/linkedin': {
+      id: '/linkedin'
+      path: '/linkedin'
+      fullPath: '/linkedin'
+      preLoaderRoute: typeof LinkedinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/influencer-feed': {
+      id: '/influencer-feed'
+      path: '/influencer-feed'
+      fullPath: '/influencer-feed'
+      preLoaderRoute: typeof InfluencerFeedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +306,98 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/influencer/': {
+      id: '/influencer/'
+      path: '/influencer'
+      fullPath: '/influencer/'
+      preLoaderRoute: typeof InfluencerIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/feed/': {
+      id: '/feed/'
+      path: '/feed'
+      fullPath: '/feed/'
+      preLoaderRoute: typeof FeedIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/canali-inspo/': {
+      id: '/canali-inspo/'
+      path: '/canali-inspo'
+      fullPath: '/canali-inspo/'
+      preLoaderRoute: typeof CanaliInspoIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/influencer/$id': {
+      id: '/influencer/$id'
+      path: '/influencer/$id'
+      fullPath: '/influencer/$id'
+      preLoaderRoute: typeof InfluencerIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/canali-inspo/$id': {
+      id: '/canali-inspo/$id'
+      path: '/canali-inspo/$id'
+      fullPath: '/canali-inspo/$id'
+      preLoaderRoute: typeof CanaliInspoIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/hooks/sync-tiktok-hashtag': {
+      id: '/api/public/hooks/sync-tiktok-hashtag'
+      path: '/api/public/hooks/sync-tiktok-hashtag'
+      fullPath: '/api/public/hooks/sync-tiktok-hashtag'
+      preLoaderRoute: typeof ApiPublicHooksSyncTiktokHashtagRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/hooks/submit-manual': {
+      id: '/api/public/hooks/submit-manual'
+      path: '/api/public/hooks/submit-manual'
+      fullPath: '/api/public/hooks/submit-manual'
+      preLoaderRoute: typeof ApiPublicHooksSubmitManualRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/hooks/poll-gmail': {
+      id: '/api/public/hooks/poll-gmail'
+      path: '/api/public/hooks/poll-gmail'
+      fullPath: '/api/public/hooks/poll-gmail'
+      preLoaderRoute: typeof ApiPublicHooksPollGmailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/hooks/link-preview': {
+      id: '/api/public/hooks/link-preview'
+      path: '/api/public/hooks/link-preview'
+      fullPath: '/api/public/hooks/link-preview'
+      preLoaderRoute: typeof ApiPublicHooksLinkPreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/hooks/delete-canale': {
+      id: '/api/public/hooks/delete-canale'
+      path: '/api/public/hooks/delete-canale'
+      fullPath: '/api/public/hooks/delete-canale'
+      preLoaderRoute: typeof ApiPublicHooksDeleteCanaleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  InfluencerFeedRoute: InfluencerFeedRoute,
+  LinkedinRoute: LinkedinRoute,
+  TiktokHashtagRoute: TiktokHashtagRoute,
+  TrendAttualiRoute: TrendAttualiRoute,
+  TrendEvergreenRoute: TrendEvergreenRoute,
+  TrendRealTimeRoute: TrendRealTimeRoute,
+  CanaliInspoIdRoute: CanaliInspoIdRoute,
+  InfluencerIdRoute: InfluencerIdRoute,
+  CanaliInspoIndexRoute: CanaliInspoIndexRoute,
+  FeedIndexRoute: FeedIndexRoute,
+  InfluencerIndexRoute: InfluencerIndexRoute,
+  ApiPublicHooksDeleteCanaleRoute: ApiPublicHooksDeleteCanaleRoute,
+  ApiPublicHooksLinkPreviewRoute: ApiPublicHooksLinkPreviewRoute,
+  ApiPublicHooksPollGmailRoute: ApiPublicHooksPollGmailRoute,
+  ApiPublicHooksSubmitManualRoute: ApiPublicHooksSubmitManualRoute,
+  ApiPublicHooksSyncTiktokHashtagRoute: ApiPublicHooksSyncTiktokHashtagRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

@@ -5,14 +5,58 @@
   "canali_inspo": [
     {
       "id": "starhotels",
-      "name": "Profilo ufficiale Starhotels",
-      "urls": ["https://www.instagram.com/starhotels"],
-      "descrizione": "Profilo Instagram ufficiale Starhotels",
+      "name": "canale proprietario",
+      "urls": [
+        "https://www.instagram.com/starhotels"
+      ],
+      "descrizione": null,
       "accounts": [
         {
           "platform": "instagram",
           "handle": "starhotels",
           "url": "https://www.instagram.com/starhotels"
+        },
+        {
+          "platform": "instagram",
+          "handle": "starhotels",
+          "url": "https://www.instagram.com/p/DZuMZRijtC0/",
+          "date": "2026-06-18T09:12:55+00:00",
+          "caption": "A wicker basket opens, a red-and-white blanket unfolds, and summer finds its pace...."
+        },
+        {
+          "platform": "instagram",
+          "handle": "starhotels",
+          "url": "https://www.instagram.com/p/DZpexeHDFZq/",
+          "date": "2026-06-16T13:17:18+00:00",
+          "caption": "An aperitivo in the vegetable garden...."
+        },
+        {
+          "platform": "instagram",
+          "handle": "starhotels",
+          "url": "https://www.instagram.com/p/DZeuRLbEvC2/",
+          "date": "2026-06-12T09:01:04+00:00",
+          "caption": "Imagine drifting through the cobblestone streets of Rome, as sunlight dances over piazzas and hidden corners...."
+        },
+        {
+          "platform": "instagram",
+          "handle": "starhotels",
+          "url": "https://www.instagram.com/p/DZZwWcajOrx/",
+          "date": "2026-06-10T10:43:03+00:00",
+          "caption": "Under the Tuscan Sun, summer takes its time...."
+        },
+        {
+          "platform": "instagram",
+          "handle": "starhotels",
+          "url": "https://www.instagram.com/p/DZKHAzECrD7/",
+          "date": "2026-06-04T08:53:14+00:00",
+          "caption": "A day that flows naturally 🍃..."
+        },
+        {
+          "platform": "instagram",
+          "handle": "starhotels",
+          "url": "https://www.instagram.com/p/DY4mK2ojHlQ/",
+          "date": "2026-05-28T13:39:09+00:00",
+          "caption": "Today, the doors of Hermitage Hotel & Resort Forte dei Marmi officially open...."
         }
       ]
     }

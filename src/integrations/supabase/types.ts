@@ -20,7 +20,9 @@ export type Database = {
           created_at: string
           id: string
           industry: string | null
+          posted_at: string | null
           raw_email: string | null
+          score: number | null
           section: string | null
           status: Database["public"]["Enums"]["trend_submission_status"]
           submitted_by: string | null
@@ -33,7 +35,9 @@ export type Database = {
           created_at?: string
           id?: string
           industry?: string | null
+          posted_at?: string | null
           raw_email?: string | null
+          score?: number | null
           section?: string | null
           status?: Database["public"]["Enums"]["trend_submission_status"]
           submitted_by?: string | null
@@ -46,7 +50,9 @@ export type Database = {
           created_at?: string
           id?: string
           industry?: string | null
+          posted_at?: string | null
           raw_email?: string | null
+          score?: number | null
           section?: string | null
           status?: Database["public"]["Enums"]["trend_submission_status"]
           submitted_by?: string | null

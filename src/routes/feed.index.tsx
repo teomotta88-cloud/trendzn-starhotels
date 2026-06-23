@@ -1,12 +1,11 @@
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/influencer-feed")({
-  component: InfluencerFeed,
+export const Route = createFileRoute("/feed/")({
+  component: TrendzFeed,
 });
 
-const TRENDS_JSON_URL =
-  "https://api.github.com/repos/teomotta88-cloud/trendzn-starhotels/contents/src/data/trends.json";
+const TRENDS_JSON_URL = "https://api.github.com/repos/teomotta88-cloud/trendzn-starhotels/contents/src/data/trends.json";
 
 const N8N_WEBHOOK = "https://trendzn.app.n8n.cloud/webhook/264eace9-2cae-47e8-8f49-e9a29d636bc2";
 
@@ -18,23 +17,21 @@ interface Account {
   caption?: string | null;
 }
 
-interface InfluencerProfile {
+interface Canale {
   id: string;
   name: string;
-  cliente: string | null;
   accounts: Account[];
 }
 
 interface TrendsData {
-  influencer_profiles?: InfluencerProfile[];
+  canali_inspo: Canale[];
 }
 
 interface Post {
   url: string;
   handle: string;
   platform: string;
-  influencerName: string;
-  cliente: string | null;
+  canaleName: string;
   date: string | null;
   caption: string | null;
 }
@@ -71,10 +68,6 @@ function formatDate(dateStr: string | null): string {
   } catch {
     return "";
   }
-}
-
-function toInputDate(d: Date): string {
-  return d.toISOString().slice(0, 10);
 }
 
 function PlatformBadge({ platform }: { platform: string }) {
@@ -165,7 +158,7 @@ function LazyEmbed({ embedUrl, height }: { embedUrl: string; height: number }) {
   );
 }
 
-function PostCard({ post }: { post: Post }) {
+function PostCard({ post, canaleName }: { post: Post; canaleName: string }) {
   const embedUrl = getEmbedUrl(post.url);
   const platform = getPlatform(post.url);
   const heights: Record<string, number> = { instagram: 480, tiktok: 560, youtube: 315 };
@@ -201,36 +194,19 @@ function PostCard({ post }: { post: Post }) {
             whiteSpace: "nowrap",
             overflow: "hidden",
             textOverflow: "ellipsis",
-            maxWidth: 110,
+            maxWidth: 120,
           }}
         >
-          {post.influencerName}
+          {canaleName}
         </span>
-        {post.cliente && (
-          <span
-            style={{
-              fontSize: 10,
-              fontWeight: 600,
-              color: "#ea580c",
-              background: "#fff7ed",
-              padding: "1px 6px",
-              borderRadius: 99,
-              whiteSpace: "nowrap",
-            }}
-          >
-            {post.cliente}
-          </span>
-        )}
         {dateStr && (
-          <span style={{ fontSize: 11, color: "#cbd5e1", marginLeft: "auto", whiteSpace: "nowrap" }}>
-            {dateStr}
-          </span>
+          <span style={{ fontSize: 11, color: "#cbd5e1", marginLeft: "auto", whiteSpace: "nowrap" }}>{dateStr}</span>
         )}
         <a
           href={post.url}
           target="_blank"
           rel="noopener noreferrer"
-          title="Apri il post"
+          title="Apri su GitHub"
           style={{
             marginLeft: dateStr ? 8 : "auto",
             display: "flex",
@@ -239,10 +215,8 @@ function PostCard({ post }: { post: Post }) {
             flexShrink: 0,
           }}
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
-            <path d="M15 3h6v6" />
-            <path d="M10 14L21 3" />
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12" />
           </svg>
         </a>
       </div>
@@ -313,7 +287,6 @@ function FilterPill({ label, active, onClick }: { label: string; active: boolean
 
 type SyncStatus = "idle" | "loading" | "success" | "error";
 type SortOrder = "recenti" | "meno_recenti";
-type DatePreset = "tutto" | "7g" | "30g" | "90g" | "custom";
 
 function SyncButton() {
   const [status, setStatus] = useState<SyncStatus>("idle");
@@ -341,10 +314,16 @@ function SyncButton() {
     error: "Errore — riprova",
   };
   const bg: Record<SyncStatus, string> = {
-    idle: "#f1f5f9", loading: "#e2e8f0", success: "#dcfce7", error: "#fee2e2",
+    idle: "#f1f5f9",
+    loading: "#e2e8f0",
+    success: "#dcfce7",
+    error: "#fee2e2",
   };
   const color: Record<SyncStatus, string> = {
-    idle: "#475569", loading: "#94a3b8", success: "#16a34a", error: "#dc2626",
+    idle: "#475569",
+    loading: "#94a3b8",
+    success: "#16a34a",
+    error: "#dc2626",
   };
 
   return (
@@ -369,84 +348,15 @@ function SyncButton() {
   );
 }
 
-function DateRangeFilter({
-  preset,
-  setPreset,
-  customFrom,
-  setCustomFrom,
-  customTo,
-  setCustomTo,
-}: {
-  preset: DatePreset;
-  setPreset: (p: DatePreset) => void;
-  customFrom: string;
-  setCustomFrom: (v: string) => void;
-  customTo: string;
-  setCustomTo: (v: string) => void;
-}) {
-  const presets: { key: DatePreset; label: string }[] = [
-    { key: "tutto", label: "Tutto" },
-    { key: "7g", label: "Ultima settimana" },
-    { key: "30g", label: "Ultimo mese" },
-    { key: "90g", label: "Ultimi 3 mesi" },
-  ];
-
-  return (
-    <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-      <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-        {presets.map((p) => (
-          <FilterPill key={p.key} label={p.label} active={preset === p.key} onClick={() => setPreset(p.key)} />
-        ))}
-        <FilterPill label="Personalizzato" active={preset === "custom"} onClick={() => setPreset("custom")} />
-      </div>
-      {preset === "custom" && (
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <input
-            type="date"
-            value={customFrom}
-            onChange={(e) => setCustomFrom(e.target.value)}
-            style={{
-              padding: "5px 8px",
-              borderRadius: 8,
-              border: "1px solid #e2e8f0",
-              fontSize: 12,
-              color: "#000",
-              outline: "none",
-            }}
-          />
-          <span style={{ fontSize: 12, color: "#94a3b8" }}>→</span>
-          <input
-            type="date"
-            value={customTo}
-            onChange={(e) => setCustomTo(e.target.value)}
-            style={{
-              padding: "5px 8px",
-              borderRadius: 8,
-              border: "1px solid #e2e8f0",
-              fontSize: 12,
-              color: "#000",
-              outline: "none",
-            }}
-          />
-        </div>
-      )}
-    </div>
-  );
-}
-
 const PAGE_SIZE = 12;
 
-function InfluencerFeed() {
+function TrendzFeed() {
   const [data, setData] = useState<TrendsData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [platformFilter, setPlatformFilter] = useState("tutti");
   const [search, setSearch] = useState("");
   const [sortOrder, setSortOrder] = useState<SortOrder>("recenti");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
-
-  const [datePreset, setDatePreset] = useState<DatePreset>("tutto");
-  const [customFrom, setCustomFrom] = useState("");
-  const [customTo, setCustomTo] = useState("");
 
   useEffect(() => {
     fetch(TRENDS_JSON_URL)
@@ -460,39 +370,21 @@ function InfluencerFeed() {
 
   useEffect(() => {
     setVisibleCount(PAGE_SIZE);
-  }, [platformFilter, search, sortOrder, datePreset, customFrom, customTo]);
+  }, [platformFilter, search, sortOrder]);
 
-  const dateRange = useMemo(() => {
-    const now = new Date();
-    if (datePreset === "tutto") return null;
-    if (datePreset === "custom") {
-      const from = customFrom ? new Date(customFrom) : null;
-      const to = customTo ? new Date(customTo + "T23:59:59") : null;
-      if (!from && !to) return null;
-      return { from, to };
-    }
-    const days = datePreset === "7g" ? 7 : datePreset === "30g" ? 30 : 90;
-    const from = new Date(now);
-    from.setDate(from.getDate() - days);
-    return { from, to: now };
-  }, [datePreset, customFrom, customTo]);
-
-  if (error)
-    return <div style={{ padding: 40, color: "#ef4444", textAlign: "center" }}>{error}</div>;
-  if (!data)
-    return <div style={{ padding: 40, color: "#94a3b8", textAlign: "center" }}>Caricamento feed…</div>;
+  if (error) return <div style={{ padding: 40, color: "#ef4444", textAlign: "center" }}>{error}</div>;
+  if (!data) return <div style={{ padding: 40, color: "#94a3b8", textAlign: "center" }}>Caricamento feed…</div>;
 
   const allPosts: Post[] = [];
-  for (const profile of data.influencer_profiles || []) {
-    const name = profile.name || profile.id || "";
-    for (const account of profile.accounts || []) {
+  for (const canale of data.canali_inspo || []) {
+    const name = canale.name || canale.id || "";
+    for (const account of canale.accounts || []) {
       if (isPostUrl(account.url)) {
         allPosts.push({
           url: account.url,
           handle: account.handle,
           platform: account.platform || getPlatform(account.url),
-          influencerName: name,
-          cliente: profile.cliente ?? null,
+          canaleName: name,
           date: account.date ?? null,
           caption: account.caption ?? null,
         });
@@ -512,22 +404,9 @@ function InfluencerFeed() {
     const matchSearch =
       !search ||
       p.handle?.toLowerCase().includes(q) ||
-      p.influencerName?.toLowerCase().includes(q) ||
-      p.cliente?.toLowerCase().includes(q) ||
+      p.canaleName?.toLowerCase().includes(q) ||
       p.caption?.toLowerCase().includes(q);
-
-    let matchDate = true;
-    if (dateRange) {
-      if (!p.date) {
-        matchDate = false;
-      } else {
-        const d = new Date(p.date);
-        if (dateRange.from && d < dateRange.from) matchDate = false;
-        if (dateRange.to && d > dateRange.to) matchDate = false;
-      }
-    }
-
-    return matchPlatform && matchSearch && matchDate;
+    return matchPlatform && matchSearch;
   });
 
   const visiblePosts = filtered.slice(0, visibleCount);
@@ -551,83 +430,69 @@ function InfluencerFeed() {
             maxWidth: 1200,
             margin: "0 auto",
             display: "flex",
-            flexDirection: "column",
-            gap: 12,
+            alignItems: "center",
+            gap: 16,
+            flexWrap: "wrap",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
-            <div style={{ fontWeight: 700, fontSize: 18, color: "#1e293b", letterSpacing: -0.5 }}>
-              Trendzn <span style={{ color: "#94a3b8", fontWeight: 400, fontSize: 14 }}>/ influencer feed</span>
-            </div>
-
-            <input
-              placeholder="Cerca influencer, cliente, account o caption…"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              style={{
-                padding: "6px 12px",
-                borderRadius: 8,
-                border: "1px solid #e2e8f0",
-                fontSize: 13,
-                outline: "none",
-                width: 260,
-                background: "#f8fafc",
-                color: "#000",
-              }}
-            />
-
-            <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-              {platforms.map((p) => (
-                <FilterPill
-                  key={p}
-                  label={p === "tutti" ? `Tutti (${allPosts.length})` : p}
-                  active={platformFilter === p}
-                  onClick={() => setPlatformFilter(p)}
-                />
-              ))}
-            </div>
-
-            <select
-              value={sortOrder}
-              onChange={(e) => setSortOrder(e.target.value as SortOrder)}
-              style={{
-                padding: "5px 10px",
-                borderRadius: 8,
-                border: "1px solid #e2e8f0",
-                background: "#fff",
-                color: "#475569",
-                fontSize: 13,
-                cursor: "pointer",
-                outline: "none",
-              }}
-            >
-              <option value="recenti">Più recenti</option>
-              <option value="meno_recenti">Meno recenti</option>
-            </select>
-
-            <SyncButton />
-
-            <span style={{ marginLeft: "auto", fontSize: 12, color: "#94a3b8" }}>
-              {filtered.length} post
-            </span>
+          <div style={{ fontWeight: 700, fontSize: 18, color: "#1e293b", letterSpacing: -0.5 }}>
+            Trendzn <span style={{ color: "#94a3b8", fontWeight: 400, fontSize: 14 }}>/ feed</span>
           </div>
 
-          <DateRangeFilter
-            preset={datePreset}
-            setPreset={setDatePreset}
-            customFrom={customFrom}
-            setCustomFrom={setCustomFrom}
-            customTo={customTo}
-            setCustomTo={setCustomTo}
+          <input
+            placeholder="Cerca canale, account o nella caption…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            style={{
+              padding: "6px 12px",
+              borderRadius: 8,
+              border: "1px solid #e2e8f0",
+              fontSize: 13,
+              outline: "none",
+              width: 240,
+              background: "#f8fafc",
+              color: "#000",
+            }}
           />
+
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+            {platforms.map((p) => (
+              <FilterPill
+                key={p}
+                label={p === "tutti" ? `Tutti (${allPosts.length})` : p}
+                active={platformFilter === p}
+                onClick={() => setPlatformFilter(p)}
+              />
+            ))}
+          </div>
+
+          <select
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value as SortOrder)}
+            style={{
+              padding: "5px 10px",
+              borderRadius: 8,
+              border: "1px solid #e2e8f0",
+              background: "#fff",
+              color: "#475569",
+              fontSize: 13,
+              cursor: "pointer",
+              outline: "none",
+            }}
+          >
+            <option value="recenti">Più recenti</option>
+            <option value="meno_recenti">Meno recenti</option>
+          </select>
+
+          <SyncButton />
+
+          <span style={{ marginLeft: "auto", fontSize: 12, color: "#94a3b8" }}>{filtered.length} post</span>
         </div>
       </div>
 
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "24px 20px" }}>
         {filtered.length === 0 ? (
-          <div style={{ textAlign: "center", color: "#94a3b8", padding: 60, fontSize: 14 }}>
-            Nessun post trovato.
-          </div>
+          <div style={{ textAlign: "center", color: "#94a3b8", padding: 60, fontSize: 14 }}>Nessun post trovato.</div>
         ) : (
           <>
             <div
@@ -638,7 +503,7 @@ function InfluencerFeed() {
               }}
             >
               {visiblePosts.map((post, i) => (
-                <PostCard key={`${post.url}-${i}`} post={post} />
+                <PostCard key={`${post.url}-${i}`} post={post} canaleName={post.canaleName} />
               ))}
             </div>
 
