@@ -1,8 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { trendRealTime, trendAttuali, trendEvergreen, canaliInspo } from "@/lib/trends";
-import { ArrowRight, Zap, TrendingUp, Sparkles } from "lucide-react";
-import { TikTokTagEmbed } from "@/components/TikTokTagEmbed";
-
+import { ArrowRight, Zap, TrendingUp, Sparkles, Music2 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -22,33 +20,52 @@ function Index() {
   const cards = [
     {
       to: "/trend-real-time",
-      label: "Trend to Act",
+      label: "Trend Real Time",
       //count: trendRealTime.length,
       icon: Zap,
       blurb: "Da realizzare in 1–2 giorni. Velocità più che crafting.",
     },
     {
-      to: "/trend-attuale",
-      label: "Trend to Adapt",
-      //count: trendRealTime.length,
-      icon: Zap,
-      blurb: "Trend da adattare al proprio brand. Crafting più che velocità.",
+      to: "/trend-attuali",
+      label: "Trend Attuali",
+      //count: trendAttuali.length,
+      icon: TrendingUp,
+      blurb: "Trend social di IG/TikTok con durata 1–2 settimane.",
     },
     {
       to: "/trend-evergreen",
-      label: "Cultural Formats",
+      label: "Trend Evergreen",
       // count: trendEvergreen.length,
       icon: Sparkles,
-      blurb: "Trend senza scadenza, che possono diventare rubriche e format.",
+      blurb: "Trend senza scadenza, sempre validi per qualsiasi brand.",
+    },
+    {
+      to: "/canali-inspo",
+      label: "Canali Inspo",
+      // count: canaliInspo.length,
+      icon: Sparkles,
+      blurb: "Account e siti da tenere d'occhio per format, meme e RTM.",
     },
     {
       to: "/influencer",
-      label: "Monitoring Creator/Influ",
+      label: "Influencer",
       //count: influencer.length,
       icon: Sparkles,
-      blurb: "Creator e Influencer da tenere d'occhio.",
+      blurb: "Influencer monitorati",
     },
-
+    {
+      to: "/linkedin",
+      label: "Linkedin",
+      //count: linkedin.length,
+      icon: Sparkles,
+      blurb: "Ispirazioni dal mondo del marketing",
+    },
+    {
+      to: "/tiktok-hashtag",
+      label: "TikTok Hashtag",
+      icon: Music2,
+      blurb: "Post pubblici raccolti automaticamente dall'hashtag #starhotels.",
+    },
   ] as const;
 
   return (
@@ -67,6 +84,24 @@ function Index() {
             Creato da SBAM su misura per Starhotels.
           </p>
         </div>
+      </section>
+
+      <section className="flex justify-center">
+        <blockquote
+          className="tiktok-embed"
+          cite="https://www.tiktok.com/tag/starhotels"
+          data-tag-id="starhotels"
+          data-embed-from="embed_page"
+          data-embed-type="tag"
+          style={{ maxWidth: 780, minWidth: 288 }}
+        >
+          <section>
+            <a target="_blank" rel="noreferrer" href="https://www.tiktok.com/tag/starhotels?refer=hashtag_embed">
+              #starhotels
+            </a>
+          </section>
+        </blockquote>
+        <script async src="https://www.tiktok.com/embed.js" />
       </section>
 
       <section className="grid grid-cols-1 gap-5 md:grid-cols-3">

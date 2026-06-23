@@ -88,7 +88,7 @@ function Page() {
       <header className="space-y-2">
         <h1 className="font-display text-3xl font-bold sm:text-4xl">TikTok Hashtag</h1>
         <p className="max-w-2xl text-sm text-muted-foreground">
-          Post raccolti automaticamente dall'hashtag{" "}
+          Post pubblici raccolti automaticamente dall'hashtag{" "}
           <a
             href="https://www.tiktok.com/tag/starhotels"
             target="_blank"
@@ -97,7 +97,7 @@ function Page() {
           >
             #starhotels
           </a>{" "}
-          su TikTok. Pubblicati
+          su TikTok. Aggiornato periodicamente da uno scraper esterno (GitHub Actions), pubblicati
           qui automaticamente senza revisione manuale.
         </p>
       </header>

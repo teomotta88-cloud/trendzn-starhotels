@@ -11,7 +11,7 @@ export const Route = createFileRoute("/influencer/")({
       { title: "Influencer — Trendzn" },
       {
         name: "description",
-        content: "Profili influencer monitorati automaticamente.",
+        content: "Profili influencer monitorati automaticamente, organizzati per cliente.",
       },
     ],
   }),
@@ -179,9 +179,9 @@ function InfluencerPage() {
     <div className="space-y-8">
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div className="space-y-2">
-          <h1 className="font-display text-3xl font-bold sm:text-4xl">Talent Monitoring</h1>
+          <h1 className="font-display text-3xl font-bold sm:text-4xl">Influencer</h1>
           <p className="max-w-2xl text-sm text-muted-foreground">
-            Monitoraggio automatico dei Talent (Creator e Influencer).
+            Profili influencer monitorati automaticamente, organizzati per cliente.
           </p>
         </div>
         <ManualSubmitDialog section="influencer" onSuccess={handleManualSuccess} />

@@ -154,16 +154,19 @@ export function SocialEmbed({ url }: { url: string }) {
     );
   }
 
-  // Il player embed v2 di TikTok ha un rapporto nativo ~325x739 (non 9:16) e
-  // mostra la caption sotto il video, oltre la viewport visibile: usiamo un
-  // box più alto con scroll interno sul contenitore esterno, perché lo
-  // scroll nativo dell'iframe (cross-origin) non è controllabile da qui.
+  // Il player embed v2 di TikTok ha una larghezza nativa fissa (~325px) e non
+  // si adatta al contenitore: per renderlo più leggibile lo ingrandiamo con
+  // una transform scale (l'iframe è cross-origin, quindi non possiamo agire
+  // sul suo layout interno, solo sulla sua resa visiva) e allarghiamo il box
+  // contenitore di conseguenza. Mostra anche la caption sotto il video, oltre
+  // la viewport visibile: usiamo un box più alto con scroll interno, perché
+  // lo scroll nativo dell'iframe non è controllabile da qui.
   if (platform === "tiktok") {
     return (
-      <div className="relative h-[560px] w-full overflow-y-auto overflow-x-hidden rounded-xl border border-border bg-black">
+      <div className="relative mx-auto h-[640px] w-full max-w-[460px] overflow-y-auto overflow-x-hidden rounded-xl border border-border bg-black">
         <iframe
           src={embed}
-          className="h-[760px] w-full"
+          className="h-[760px] w-[325px] origin-top-left scale-[1.4]"
           allow="autoplay; encrypted-media; picture-in-picture; web-share"
           allowFullScreen
           loading="lazy"
