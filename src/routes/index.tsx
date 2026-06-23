@@ -20,51 +20,37 @@ function Index() {
   const cards = [
     {
       to: "/trend-real-time",
-      label: "Trend Real Time",
+      label: "Trend to Act",
       //count: trendRealTime.length,
       icon: Zap,
       blurb: "Da realizzare in 1–2 giorni. Velocità più che crafting.",
     },
     {
       to: "/trend-attuali",
-      label: "Trend Attuali",
+      label: "Trend to Adapt",
       //count: trendAttuali.length,
       icon: TrendingUp,
-      blurb: "Trend social di IG/TikTok con durata 1–2 settimane.",
+      blurb: "Trend social di IG/TikTok con durata 2-4 settimane.",
     },
     {
       to: "/trend-evergreen",
-      label: "Trend Evergreen",
+      label: "Cultural Formats",
       // count: trendEvergreen.length,
       icon: Sparkles,
-      blurb: "Trend senza scadenza, sempre validi per qualsiasi brand.",
-    },
-    {
-      to: "/canali-inspo",
-      label: "Canali Inspo",
-      // count: canaliInspo.length,
-      icon: Sparkles,
-      blurb: "Account e siti da tenere d'occhio per format, meme e RTM.",
+      blurb: "Trend senza scadenza, che possono evolvere in rubriche, format editoriali e nuovi territori di comunicazione.",
     },
     {
       to: "/influencer",
-      label: "Influencer",
+      label: "Talent Monitoring",
       //count: influencer.length,
       icon: Sparkles,
-      blurb: "Influencer monitorati",
-    },
-    {
-      to: "/linkedin",
-      label: "Linkedin",
-      //count: linkedin.length,
-      icon: Sparkles,
-      blurb: "Ispirazioni dal mondo del marketing",
+      blurb: "Monitoraggio Creator e Influencer - Real Time",
     },
     {
       to: "/tiktok-hashtag",
       label: "TikTok Hashtag",
       icon: Music2,
-      blurb: "Post pubblici raccolti automaticamente dall'hashtag #starhotels.",
+      blurb: "Monitoraggio delle conversazioni tramite l'hashtag #starhotels.",
     },
   ] as const;
 
@@ -84,24 +70,6 @@ function Index() {
             Creato da SBAM su misura per Starhotels.
           </p>
         </div>
-      </section>
-
-      <section className="flex justify-center">
-        <blockquote
-          className="tiktok-embed"
-          cite="https://www.tiktok.com/tag/starhotels"
-          data-tag-id="starhotels"
-          data-embed-from="embed_page"
-          data-embed-type="tag"
-          style={{ maxWidth: 780, minWidth: 288 }}
-        >
-          <section>
-            <a target="_blank" rel="noreferrer" href="https://www.tiktok.com/tag/starhotels?refer=hashtag_embed">
-              #starhotels
-            </a>
-          </section>
-        </blockquote>
-        <script async src="https://www.tiktok.com/embed.js" />
       </section>
 
       <section className="grid grid-cols-1 gap-5 md:grid-cols-3">
