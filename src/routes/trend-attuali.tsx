@@ -22,6 +22,7 @@ type DbRow = {
   tags: string[] | null;
   score: number | null;
   created_at: string | null;
+  raw_email: string | null;
 };
 
 function rowToTrendItem(row: DbRow): TrendItem {
@@ -35,6 +36,8 @@ function rowToTrendItem(row: DbRow): TrendItem {
     canali: null,
     score: row.score ?? null,
     createdAt: row.created_at ?? null,
+    rawEmail: row.raw_email ?? null,
+    tags: row.tags ?? null,
   };
 }
 
@@ -45,7 +48,7 @@ function Page() {
   const fetchRows = useCallback(() => {
     supabase
       .from("trend_submissions")
-      .select("id, url, title, category, industry, tags, score, created_at")
+      .select("id, url, title, category, industry, tags, score, created_at, raw_email")
       .eq("section", "trend-attuali")
       .eq("status", "approved")
       .order("created_at", { ascending: false })

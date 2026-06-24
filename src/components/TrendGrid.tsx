@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import type { TrendItem } from "@/lib/trends";
-import { detectPlatform } from "@/lib/trends";
+import { detectPlatform, extractUsername } from "@/lib/trends";
 import { SocialEmbed, PlatformIcon } from "./SocialEmbed";
 import { Search, X, Trash2, Star } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -56,7 +56,17 @@ export function TrendGrid({ items, dbIds = {}, onDelete, showScore = false }: Pr
     if (platform && !i.links.some((l) => detectPlatform(l) === platform)) return false;
     if (scoreFilter && String(i.score ?? "") !== scoreFilter) return false;
     if (query) {
-      const hay = [i.nome_trend, i.descrizione, i.applicazione, i.canali, i.industry]
+      const hay = [
+        i.nome_trend,
+        i.descrizione,
+        i.applicazione,
+        i.canali,
+        i.industry,
+        i.category,
+        i.rawEmail,
+        ...(i.tags ?? []),
+        ...i.links.map(extractUsername),
+      ]
         .filter(Boolean)
         .join(" ")
         .toLowerCase();
@@ -117,7 +127,7 @@ export function TrendGrid({ items, dbIds = {}, onDelete, showScore = false }: Pr
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Cerca per nome, descrizione, applicazione…"
+            placeholder="Cerca per nome, descrizione, caption, username, mail…"
             className="w-full rounded-lg border border-border bg-background/60 py-2 pl-9 pr-3 text-sm outline-none focus:border-primary"
           />
         </div>
