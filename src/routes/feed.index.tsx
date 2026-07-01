@@ -5,7 +5,7 @@ export const Route = createFileRoute("/feed/")({
   component: TrendzFeed,
 });
 
-const TRENDS_JSON_URL = "https://api.github.com/repos/teomotta88-cloud/trendzn-starhotels/contents/src/data/trends.json";
+const TRENDS_JSON_URL = "https://raw.githubusercontent.com/teomotta88-cloud/trendzn-starhotels/main/src/data/trends.json";
 
 const N8N_WEBHOOK = "https://trendzn.app.n8n.cloud/webhook/264eace9-2cae-47e8-8f49-e9a29d636bc2";
 const GITHUB_SYNC_ENDPOINT = "/api/public/hooks/trigger-sync-canali-feed";
@@ -362,8 +362,8 @@ function TrendzFeed() {
   useEffect(() => {
     fetch(TRENDS_JSON_URL)
       .then((r) => r.json())
-      .then((res) => {
-        const decoded = JSON.parse(atob(res.content.replace(/\n/g, "")));
+      .then((decoded) => {
+        
         setData(decoded);
       })
       .catch(() => setError("Impossibile caricare il feed."));
