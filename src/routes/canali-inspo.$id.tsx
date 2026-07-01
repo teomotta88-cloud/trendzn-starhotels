@@ -11,7 +11,7 @@ export const Route = createFileRoute("/canali-inspo/$id")({
   component: Page,
 });
 
-const TRENDS_JSON_URL = "https://api.github.com/repos/teomotta88-cloud/trendzn-starhotels/contents/src/data/trends.json";
+const TRENDS_JSON_URL = "https://raw.githubusercontent.com/teomotta88-cloud/trendzn-starhotels/main/src/data/trends.json";
 
 const POST_URL_RE = /\/(p|reel|reels|video|photo|watch|tv)\//i;
 
@@ -41,8 +41,8 @@ function Page() {
   useEffect(() => {
     fetch(TRENDS_JSON_URL)
       .then((r) => r.json())
-      .then((res) => {
-        const decoded = JSON.parse(atob(res.content.replace(/\n/g, "")));
+      .then((decoded) => {
+        
         const found = (decoded.canali_inspo as CanaleInspo[]).find((c) => c.id === id);
         if (!found) {
           setError("Canale non trovato");

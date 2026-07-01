@@ -19,7 +19,7 @@ export const Route = createFileRoute("/influencer/")({
 });
 
 const TRENDS_JSON_URL =
-  "https://api.github.com/repos/teomotta88-cloud/trendzn-starhotels/contents/src/data/trends.json";
+  "https://raw.githubusercontent.com/teomotta88-cloud/trendzn-starhotels/main/src/data/trends.json";
 
 function detectPlatform(url: string): "instagram" | "tiktok" | "youtube" | "web" {
   if (/instagram\.com/.test(url)) return "instagram";
@@ -79,8 +79,8 @@ function InfluencerPage() {
   const fetchJson = useCallback(() => {
     return fetch(TRENDS_JSON_URL)
       .then((r) => r.json())
-      .then((res) => {
-        const decoded = JSON.parse(atob(res.content.replace(/\n/g, "")));
+      .then((decoded) => {
+        
         setJsonProfiles(decoded.influencer_profiles || []);
       })
       .catch((e) => console.error("Errore caricamento trends.json:", e));
