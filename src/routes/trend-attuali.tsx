@@ -3,7 +3,6 @@ import { useEffect, useState, useCallback } from "react";
 import { trendAttuali } from "@/lib/trends";
 import type { TrendItem } from "@/lib/trends";
 import { TrendGrid } from "@/components/TrendGrid";
-import { ManualSubmitDialog } from "@/components/ManualSubmitDialog";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/trend-attuali")({
@@ -79,12 +78,11 @@ function Page() {
             Reinterpretabili e adattabili al Tone of Voice e all'identity del brand.
           </p>
         </div>
-        <ManualSubmitDialog section="trend-attuali" onSuccess={fetchRows} />
       </header>
       {loading ? (
         <div className="text-sm text-muted-foreground">Caricamento…</div>
       ) : (
-        <TrendGrid items={allItems} dbIds={dbIds} onDelete={handleDelete} showScore />
+        <TrendGrid items={allItems} dbIds={dbIds} onDelete={handleDelete} showScore hideCategoryFilter />
       )}
     </div>
   );

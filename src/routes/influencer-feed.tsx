@@ -40,6 +40,12 @@ interface Post {
   caption: string | null;
 }
 
+function decodeHtmlEntities(str: string): string {
+  const textarea = document.createElement("textarea");
+  textarea.innerHTML = str;
+  return textarea.value;
+}
+
 function isPostUrl(url: string): boolean {
   return /\/p\/|\/reel\/|\/reels\/|\/video\/|\/photo\/|\/watch\/|\/tv\//.test(url);
 }
@@ -283,7 +289,7 @@ function PostCard({ post }: { post: Post }) {
             overflow: "hidden",
           }}
         >
-          {post.caption}
+          {decodeHtmlEntities(post.caption)}
         </p>
       )}
     </div>
@@ -606,8 +612,7 @@ function InfluencerFeed() {
               <option value="meno_recenti">Meno recenti</option>
             </select>
 
-            <SyncButton endpoint={N8N_WEBHOOK} label="↻ Sync ora - N8N" />
-            <SyncButton endpoint={GITHUB_SYNC_ENDPOINT} label="↻ Sync ora - Github" />
+            <SyncButton endpoint={GITHUB_SYNC_ENDPOINT} label="↻ Sincronizza ora" />
 
             <span style={{ marginLeft: "auto", fontSize: 12, color: "#94a3b8" }}>
               {filtered.length} post

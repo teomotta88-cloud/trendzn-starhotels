@@ -1,4 +1,10 @@
 import { useMemo, useState } from "react";
+
+function decodeHtmlEntities(str: string): string {
+  const textarea = document.createElement("textarea");
+  textarea.innerHTML = str;
+  return textarea.value;
+}
 import type { TrendItem } from "@/lib/trends";
 import { detectPlatform, extractUsername } from "@/lib/trends";
 import { SocialEmbed, PlatformIcon } from "./SocialEmbed";
@@ -10,6 +16,7 @@ type Props = {
   dbIds?: Record<string, string>; // url → supabase id
   onDelete?: (url: string) => void;
   showScore?: boolean;
+  hideCategoryFilter?: boolean;
 };
 
 type SortKey = "date-desc" | "date-asc" | "score-desc" | "score-asc";
@@ -37,7 +44,7 @@ function StarRating({ score }: { score: number }) {
   );
 }
 
-export function TrendGrid({ items, dbIds = {}, onDelete, showScore = false }: Props) {
+export function TrendGrid({ items, dbIds = {}, onDelete, showScore = false, hideCategoryFilter = false }: Props) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<string>("");
   const [industry, setIndustry] = useState<string>("");
@@ -131,8 +138,8 @@ export function TrendGrid({ items, dbIds = {}, onDelete, showScore = false }: Pr
             className="w-full rounded-lg border border-border bg-background/60 py-2 pl-9 pr-3 text-sm outline-none focus:border-primary"
           />
         </div>
-        <Select label="Categoria" value={category} onChange={setCategory} options={categories} />
-        <Select label="Industry" value={industry} onChange={setIndustry} options={industries} />
+        {!hideCategoryFilter && <Select label="Categoria" value={category} onChange={setCategory} options={categories} />}
+        <Select label={hideCategoryFilter ? "Categoria" : "Industry"} value={industry} onChange={setIndustry} options={industries} />
         <Select label="Piattaforma" value={platform} onChange={setPlatform} options={platforms} />
         {showScore && <Select label="Score" value={scoreFilter} onChange={setScoreFilter} options={["1", "2", "3"]} />}
         <select
@@ -220,9 +227,9 @@ export function TrendGrid({ items, dbIds = {}, onDelete, showScore = false }: Pr
                 <SocialEmbed url={url} />
                 <div className="space-y-2 px-1 pb-2">
                   <h3 className="font-display text-base font-semibold leading-snug text-foreground">
-                    {item.nome_trend ?? "—"}
+                    {item.nome_trend ? decodeHtmlEntities(item.nome_trend) : "—"}
                   </h3>
-                  {item.descrizione && <p className="text-xs text-muted-foreground line-clamp-3">{item.descrizione}</p>}
+                  {item.descrizione && <p className="text-xs text-muted-foreground line-clamp-3">{decodeHtmlEntities(item.descrizione)}</p>}
                   {item.applicazione && (
                     <p className="text-xs text-foreground/80">
                       <span className="text-muted-foreground">Applicazione:</span> {item.applicazione}
