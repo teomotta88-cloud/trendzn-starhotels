@@ -22,6 +22,7 @@ import { Route as CanaliInspoIndexRouteImport } from './routes/canali-inspo.inde
 import { Route as InfluencerIdRouteImport } from './routes/influencer.$id'
 import { Route as CanaliInspoIdRouteImport } from './routes/canali-inspo.$id'
 import { Route as ApiPublicHooksTriggerSyncCanaliFeedRouteImport } from './routes/api/public/hooks/trigger-sync-canali-feed'
+import { Route as ApiPublicHooksTiktokOembedRouteImport } from './routes/api/public/hooks/tiktok-oembed'
 import { Route as ApiPublicHooksSyncTiktokHashtagRouteImport } from './routes/api/public/hooks/sync-tiktok-hashtag'
 import { Route as ApiPublicHooksSubmitManualRouteImport } from './routes/api/public/hooks/submit-manual'
 import { Route as ApiPublicHooksPollGmailRouteImport } from './routes/api/public/hooks/poll-gmail'
@@ -94,6 +95,12 @@ const ApiPublicHooksTriggerSyncCanaliFeedRoute =
     path: '/api/public/hooks/trigger-sync-canali-feed',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicHooksTiktokOembedRoute =
+  ApiPublicHooksTiktokOembedRouteImport.update({
+    id: '/api/public/hooks/tiktok-oembed',
+    path: '/api/public/hooks/tiktok-oembed',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicHooksSyncTiktokHashtagRoute =
   ApiPublicHooksSyncTiktokHashtagRouteImport.update({
     id: '/api/public/hooks/sync-tiktok-hashtag',
@@ -142,6 +149,7 @@ export interface FileRoutesByFullPath {
   '/api/public/hooks/poll-gmail': typeof ApiPublicHooksPollGmailRoute
   '/api/public/hooks/submit-manual': typeof ApiPublicHooksSubmitManualRoute
   '/api/public/hooks/sync-tiktok-hashtag': typeof ApiPublicHooksSyncTiktokHashtagRoute
+  '/api/public/hooks/tiktok-oembed': typeof ApiPublicHooksTiktokOembedRoute
   '/api/public/hooks/trigger-sync-canali-feed': typeof ApiPublicHooksTriggerSyncCanaliFeedRoute
 }
 export interface FileRoutesByTo {
@@ -162,6 +170,7 @@ export interface FileRoutesByTo {
   '/api/public/hooks/poll-gmail': typeof ApiPublicHooksPollGmailRoute
   '/api/public/hooks/submit-manual': typeof ApiPublicHooksSubmitManualRoute
   '/api/public/hooks/sync-tiktok-hashtag': typeof ApiPublicHooksSyncTiktokHashtagRoute
+  '/api/public/hooks/tiktok-oembed': typeof ApiPublicHooksTiktokOembedRoute
   '/api/public/hooks/trigger-sync-canali-feed': typeof ApiPublicHooksTriggerSyncCanaliFeedRoute
 }
 export interface FileRoutesById {
@@ -183,6 +192,7 @@ export interface FileRoutesById {
   '/api/public/hooks/poll-gmail': typeof ApiPublicHooksPollGmailRoute
   '/api/public/hooks/submit-manual': typeof ApiPublicHooksSubmitManualRoute
   '/api/public/hooks/sync-tiktok-hashtag': typeof ApiPublicHooksSyncTiktokHashtagRoute
+  '/api/public/hooks/tiktok-oembed': typeof ApiPublicHooksTiktokOembedRoute
   '/api/public/hooks/trigger-sync-canali-feed': typeof ApiPublicHooksTriggerSyncCanaliFeedRoute
 }
 export interface FileRouteTypes {
@@ -205,6 +215,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/poll-gmail'
     | '/api/public/hooks/submit-manual'
     | '/api/public/hooks/sync-tiktok-hashtag'
+    | '/api/public/hooks/tiktok-oembed'
     | '/api/public/hooks/trigger-sync-canali-feed'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -225,6 +236,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/poll-gmail'
     | '/api/public/hooks/submit-manual'
     | '/api/public/hooks/sync-tiktok-hashtag'
+    | '/api/public/hooks/tiktok-oembed'
     | '/api/public/hooks/trigger-sync-canali-feed'
   id:
     | '__root__'
@@ -245,6 +257,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/poll-gmail'
     | '/api/public/hooks/submit-manual'
     | '/api/public/hooks/sync-tiktok-hashtag'
+    | '/api/public/hooks/tiktok-oembed'
     | '/api/public/hooks/trigger-sync-canali-feed'
   fileRoutesById: FileRoutesById
 }
@@ -266,6 +279,7 @@ export interface RootRouteChildren {
   ApiPublicHooksPollGmailRoute: typeof ApiPublicHooksPollGmailRoute
   ApiPublicHooksSubmitManualRoute: typeof ApiPublicHooksSubmitManualRoute
   ApiPublicHooksSyncTiktokHashtagRoute: typeof ApiPublicHooksSyncTiktokHashtagRoute
+  ApiPublicHooksTiktokOembedRoute: typeof ApiPublicHooksTiktokOembedRoute
   ApiPublicHooksTriggerSyncCanaliFeedRoute: typeof ApiPublicHooksTriggerSyncCanaliFeedRoute
 }
 
@@ -369,6 +383,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksSyncTiktokHashtagRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/tiktok-oembed': {
+      id: '/api/public/hooks/tiktok-oembed'
+      path: '/api/public/hooks/tiktok-oembed'
+      fullPath: '/api/public/hooks/tiktok-oembed'
+      preLoaderRoute: typeof ApiPublicHooksTiktokOembedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/submit-manual': {
       id: '/api/public/hooks/submit-manual'
       path: '/api/public/hooks/submit-manual'
@@ -418,6 +439,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicHooksPollGmailRoute: ApiPublicHooksPollGmailRoute,
   ApiPublicHooksSubmitManualRoute: ApiPublicHooksSubmitManualRoute,
   ApiPublicHooksSyncTiktokHashtagRoute: ApiPublicHooksSyncTiktokHashtagRoute,
+  ApiPublicHooksTiktokOembedRoute: ApiPublicHooksTiktokOembedRoute,
   ApiPublicHooksTriggerSyncCanaliFeedRoute: ApiPublicHooksTriggerSyncCanaliFeedRoute,
 }
 export const routeTree = rootRouteImport
