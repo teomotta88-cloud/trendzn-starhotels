@@ -78,8 +78,7 @@ function Page() {
           >
             #starhotels
           </a>{" "}
-          su TikTok. Aggiornato periodicamente da uno scraper esterno (GitHub Actions), pubblicati
-          qui automaticamente senza revisione manuale.
+          su TikTok.
         </p>
       </header>
       {loading ? (
