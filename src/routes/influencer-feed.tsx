@@ -280,13 +280,13 @@ function PostCard({ post }: { post: Post }) {
             margin: 0,
             padding: "10px 14px",
             fontSize: 12,
-            lineHeight: 1.4,
+            lineHeight: 1.5,
             color: "#475569",
             borderTop: "1px solid #f1f1f1",
-            display: "-webkit-box",
-            WebkitLineClamp: 3,
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
+            maxHeight: 80,
+            overflowY: "auto",
+            whiteSpace: "pre-wrap",
+            wordBreak: "break-word",
           }}
         >
           {decodeHtmlEntities(post.caption)}
