@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState, useEffect, useCallback } from "react";
 import { PlatformIcon } from "@/components/SocialEmbed";
-import { ManualSubmitDialog } from "@/components/ManualSubmitDialog";
 import { Search, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -102,12 +101,7 @@ function InfluencerPage() {
     Promise.all([fetchJson(), fetchDb()]).finally(() => setLoading(false));
   }, [fetchJson, fetchDb]);
 
-  const handleManualSuccess = useCallback(() => {
-    fetchDb();
-    setTimeout(fetchJson, 1500);
-  }, [fetchDb, fetchJson]);
-
-  const handleToDbId = useMemo(() => {
+const handleToDbId = useMemo(() => {
     const map = new Map<string, string>();
     dbRows.forEach((r) => {
       const handle = extractHandle(r.url).toLowerCase();
@@ -184,7 +178,6 @@ function InfluencerPage() {
             Profili influencer monitorati automaticamente, organizzati per cliente.
           </p>
         </div>
-        <ManualSubmitDialog section="influencer" onSuccess={handleManualSuccess} />
       </header>
 
       <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-border bg-card/50 p-4">

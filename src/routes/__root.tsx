@@ -148,8 +148,7 @@ const NAV_ITEMS = [
   { to: "/trend-evergreen", label: "Cultural Formats" },
   { to: "/influencer", label: "Talent Monitoring" },
   { to: "/influencer-feed", label: "Influencer Feed" },
-  { to: "/feed", label: "Feed" },
-  { to: "/tiktok-hashtag", label: "TikTok Hashtag" },
+{ to: "/tiktok-hashtag", label: "TikTok Hashtag" },
 ];
 
 // Badge stile "storia Instagram": anello sottile + cerchio bianco con il
