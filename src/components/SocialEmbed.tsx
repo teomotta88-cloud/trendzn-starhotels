@@ -8,8 +8,9 @@ import { ExternalLink, Instagram, Music2, Youtube, Globe, Linkedin, Play } from 
 // lo consentono comunque), quindi l'unico modo per evitare che tutti i
 // video carichino dati e suonino contemporaneamente è richiedere
 // l'iframe solo per i contenuti effettivamente visibili. Per TikTok si va
-// oltre: vedi TikTokEmbed, che mostra solo un frame di anteprima finché
-// l'utente non clicca play.
+// oltre: vedi TikTokEmbed, che mostra solo un frame di anteprima (caricato
+// subito per tutti i post in pagina, non solo quelli in viewport, perché è
+// leggero) finché l'utente non clicca play.
 function useVisible<T extends HTMLElement>(threshold = 0.5) {
   const ref = useRef<T>(null);
   const [visible, setVisible] = useState(false);
@@ -142,15 +143,16 @@ function LinkedInPreview({ url }: { url: string }) {
 const TIKTOK_NATIVE_WIDTH = 325;
 const TIKTOK_NATIVE_HEIGHT = 860;
 
-// Anteprima statica (frame di copertina) recuperata dall'oEmbed pubblico di
-// TikTok, così possiamo mostrare un'immagine leggera al posto dell'iframe
-// finché l'utente non decide di guardare il video.
-function useTikTokThumbnail(url: string, enabled: boolean) {
+// Anteprima statica (frame di copertina + caption) recuperata dall'oEmbed
+// pubblico di TikTok, così possiamo mostrare da subito un'immagine leggera
+// al posto dell'iframe, per ogni post presente in pagina (non solo quelli
+// in viewport: è solo una piccola richiesta JSON, non un player).
+function useTikTokThumbnail(url: string) {
   const [thumbnail, setThumbnail] = useState<string | null>(null);
+  const [title, setTitle] = useState<string | null>(null);
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
-    if (!enabled) return;
     let cancelled = false;
     fetch(`/api/public/hooks/tiktok-oembed?url=${encodeURIComponent(url)}`)
       .then((r) => r.json())
@@ -158,6 +160,7 @@ function useTikTokThumbnail(url: string, enabled: boolean) {
         if (cancelled) return;
         if (data.ok && data.thumbnail) {
           setThumbnail(data.thumbnail);
+          setTitle(data.title ?? null);
         } else {
           setFailed(true);
         }
@@ -168,9 +171,9 @@ function useTikTokThumbnail(url: string, enabled: boolean) {
     return () => {
       cancelled = true;
     };
-  }, [url, enabled]);
+  }, [url]);
 
-  return { thumbnail, failed };
+  return { thumbnail, title, failed };
 }
 
 // Player TikTok vero e proprio: viene montato solo dopo il click sull'anteprima,
@@ -199,9 +202,8 @@ function TikTokPlayerFrame({ embed, scale }: { embed: string; scale: number }) {
 function TikTokEmbed({ embed, url }: { embed: string; url: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
-  const [visibleRef, visible] = useVisible<HTMLDivElement>();
   const [activated, setActivated] = useState(false);
-  const { thumbnail, failed } = useTikTokThumbnail(url, visible);
+  const { thumbnail, title, failed } = useTikTokThumbnail(url);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -215,42 +217,53 @@ function TikTokEmbed({ embed, url }: { embed: string; url: string }) {
 
   return (
     <div
-      ref={(el) => {
-        containerRef.current = el;
-        visibleRef.current = el;
-      }}
+      ref={containerRef}
       className="relative mx-auto w-full max-w-[260px] overflow-hidden rounded-xl border border-border bg-black"
-      style={{ aspectRatio: `${TIKTOK_NATIVE_WIDTH} / ${TIKTOK_NATIVE_HEIGHT}` }}
+      style={
+        activated
+          ? { aspectRatio: `${TIKTOK_NATIVE_WIDTH} / ${TIKTOK_NATIVE_HEIGHT}` }
+          : undefined
+      }
     >
-      {visible && activated && (
+      {activated ? (
         <TikTokPlayerFrame embed={embed} scale={scale} />
-      )}
-      {visible && !activated && (
+      ) : (
         <button
           type="button"
           onClick={() => setActivated(true)}
           aria-label="Riproduci video TikTok"
-          className="group absolute inset-0 flex size-full items-center justify-center"
+          className="group flex w-full flex-col text-left"
         >
-          {thumbnail ? (
-            <img
-              src={thumbnail}
-              alt=""
-              loading="lazy"
-              className="absolute inset-0 size-full object-cover"
-            />
-          ) : (
-            <div className="absolute inset-0 flex items-center justify-center bg-neutral-900">
-              {!failed && (
-                <Music2 className="size-8 animate-pulse text-neutral-600" />
-              )}
-              {failed && <Music2 className="size-8 text-neutral-600" />}
-            </div>
+          <div
+            className="relative w-full overflow-hidden bg-neutral-900"
+            style={{ aspectRatio: "3 / 4" }}
+          >
+            {thumbnail ? (
+              <img
+                src={thumbnail}
+                alt=""
+                loading="lazy"
+                className="absolute inset-0 size-full object-cover transition group-hover:scale-105"
+              />
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Music2
+                  className={`size-8 text-neutral-600 ${failed ? "" : "animate-pulse"}`}
+                />
+              </div>
+            )}
+            <span className="absolute inset-0 bg-black/10 transition group-hover:bg-black/25" />
+            <span className="absolute inset-0 flex items-center justify-center">
+              <span className="flex size-14 items-center justify-center rounded-full bg-black/60 text-white shadow-lg transition group-hover:scale-110 group-hover:bg-black/80">
+                <Play className="size-6 translate-x-0.5 fill-white" />
+              </span>
+            </span>
+          </div>
+          {title && (
+            <p className="line-clamp-3 px-3 py-2 text-xs text-white/90">
+              {title}
+            </p>
           )}
-          <span className="absolute inset-0 bg-black/10 transition group-hover:bg-black/25" />
-          <span className="relative flex size-14 items-center justify-center rounded-full bg-black/60 text-white shadow-lg transition group-hover:scale-110 group-hover:bg-black/80">
-            <Play className="size-6 translate-x-0.5 fill-white" />
-          </span>
         </button>
       )}
     </div>
