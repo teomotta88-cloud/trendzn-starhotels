@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { detectPlatform, embedUrl } from "@/lib/trends";
-import { ExternalLink, Instagram, Music2, Youtube, Globe, Linkedin } from "lucide-react";
+import { ExternalLink, Instagram, Music2, Youtube, Globe, Linkedin, Play } from "lucide-react";
 
 // L'iframe viene montato solo quando la card entra nel viewport e
-// smontato quando ne esce: gli embed di TikTok/Instagram/YouTube partono
+// smontato quando ne esce: gli embed di Instagram/YouTube/LinkedIn partono
 // in autoplay muto a prescindere dalla permission "autoplay" (i browser
 // lo consentono comunque), quindi l'unico modo per evitare che tutti i
 // video carichino dati e suonino contemporaneamente è richiedere
-// l'iframe solo per i contenuti effettivamente visibili.
+// l'iframe solo per i contenuti effettivamente visibili. Per TikTok si va
+// oltre: vedi TikTokEmbed, che mostra solo un frame di anteprima finché
+// l'utente non clicca play.
 function useVisible<T extends HTMLElement>(threshold = 0.5) {
   const ref = useRef<T>(null);
   const [visible, setVisible] = useState(false);
@@ -140,10 +142,66 @@ function LinkedInPreview({ url }: { url: string }) {
 const TIKTOK_NATIVE_WIDTH = 325;
 const TIKTOK_NATIVE_HEIGHT = 860;
 
-function TikTokEmbed({ embed }: { embed: string }) {
+// Anteprima statica (frame di copertina) recuperata dall'oEmbed pubblico di
+// TikTok, così possiamo mostrare un'immagine leggera al posto dell'iframe
+// finché l'utente non decide di guardare il video.
+function useTikTokThumbnail(url: string, enabled: boolean) {
+  const [thumbnail, setThumbnail] = useState<string | null>(null);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    if (!enabled) return;
+    let cancelled = false;
+    fetch(`/api/public/hooks/tiktok-oembed?url=${encodeURIComponent(url)}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (cancelled) return;
+        if (data.ok && data.thumbnail) {
+          setThumbnail(data.thumbnail);
+        } else {
+          setFailed(true);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setFailed(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [url, enabled]);
+
+  return { thumbnail, failed };
+}
+
+// Player TikTok vero e proprio: viene montato solo dopo il click sull'anteprima,
+// per evitare l'autoplay muto che TikTok avvia automaticamente non appena
+// l'iframe /embed/v2/ viene caricato.
+function TikTokPlayerFrame({ embed, scale }: { embed: string; scale: number }) {
+  return (
+    <iframe
+      src={embed}
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: TIKTOK_NATIVE_WIDTH,
+        height: TIKTOK_NATIVE_HEIGHT,
+        transform: `scale(${scale})`,
+        transformOrigin: "top left",
+      }}
+      allow="encrypted-media; picture-in-picture; web-share; autoplay"
+      allowFullScreen
+      title="Video TikTok"
+    />
+  );
+}
+
+function TikTokEmbed({ embed, url }: { embed: string; url: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
   const [visibleRef, visible] = useVisible<HTMLDivElement>();
+  const [activated, setActivated] = useState(false);
+  const { thumbnail, failed } = useTikTokThumbnail(url, visible);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -164,22 +222,36 @@ function TikTokEmbed({ embed }: { embed: string }) {
       className="relative mx-auto w-full max-w-[260px] overflow-hidden rounded-xl border border-border bg-black"
       style={{ aspectRatio: `${TIKTOK_NATIVE_WIDTH} / ${TIKTOK_NATIVE_HEIGHT}` }}
     >
-      {visible && (
-        <iframe
-          src={embed}
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: TIKTOK_NATIVE_WIDTH,
-            height: TIKTOK_NATIVE_HEIGHT,
-            transform: `scale(${scale})`,
-            transformOrigin: "top left",
-          }}
-          allow="encrypted-media; picture-in-picture; web-share"
-          allowFullScreen
-          loading="lazy"
-        />
+      {visible && activated && (
+        <TikTokPlayerFrame embed={embed} scale={scale} />
+      )}
+      {visible && !activated && (
+        <button
+          type="button"
+          onClick={() => setActivated(true)}
+          aria-label="Riproduci video TikTok"
+          className="group absolute inset-0 flex size-full items-center justify-center"
+        >
+          {thumbnail ? (
+            <img
+              src={thumbnail}
+              alt=""
+              loading="lazy"
+              className="absolute inset-0 size-full object-cover"
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center bg-neutral-900">
+              {!failed && (
+                <Music2 className="size-8 animate-pulse text-neutral-600" />
+              )}
+              {failed && <Music2 className="size-8 text-neutral-600" />}
+            </div>
+          )}
+          <span className="absolute inset-0 bg-black/10 transition group-hover:bg-black/25" />
+          <span className="relative flex size-14 items-center justify-center rounded-full bg-black/60 text-white shadow-lg transition group-hover:scale-110 group-hover:bg-black/80">
+            <Play className="size-6 translate-x-0.5 fill-white" />
+          </span>
+        </button>
       )}
     </div>
   );
@@ -231,7 +303,7 @@ export function SocialEmbed({ url }: { url: string }) {
   }
 
   if (platform === "tiktok") {
-    return <TikTokEmbed embed={embed} />;
+    return <TikTokEmbed embed={embed} url={url} />;
   }
 
   const aspect = platform === "youtube" ? "aspect-video" : "aspect-[9/16]";
