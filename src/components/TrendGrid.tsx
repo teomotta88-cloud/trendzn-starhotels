@@ -107,8 +107,12 @@ export function TrendGrid({ items, dbIds = {}, onDelete, showScore = false, hide
     if (!id) return;
     if (!window.confirm("Eliminare questo contenuto?")) return;
     setDeleting(url);
-    await supabase.from("trend_submissions").delete().eq("id", id);
+    const { error } = await supabase.from("trend_submissions").delete().eq("id", id);
     setDeleting(null);
+    if (error) {
+      alert(`Errore eliminazione: ${error.message}`);
+      return;
+    }
     onDelete?.(url);
   }
 
