@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { detectPlatform, embedUrl } from "@/lib/trends";
-import { ExternalLink, Instagram, Music2, Youtube, Globe, Linkedin, Play } from "lucide-react";
+import { ExternalLink, Instagram, Music2, Youtube, Globe, Linkedin, Play, ArrowUpRight } from "lucide-react";
 
 // L'iframe viene montato solo quando la card entra nel viewport e
 // smontato quando ne esce: gli embed di Instagram/YouTube/LinkedIn partono
@@ -178,24 +178,39 @@ function useTikTokThumbnail(url: string) {
 
 // Player TikTok vero e proprio: viene montato solo dopo il click sull'anteprima,
 // per evitare l'autoplay muto che TikTok avvia automaticamente non appena
-// l'iframe /embed/v2/ viene caricato.
-function TikTokPlayerFrame({ embed, scale }: { embed: string; scale: number }) {
+// l'iframe /embed/v2/ viene caricato. Alcuni post (privacy dell'autore,
+// restrizioni geografiche, contenuti "solo foto") restano su un frame
+// fermo nell'iframe di TikTok senza che noi possiamo saperlo o farci
+// nulla (è cross-origin): il link "Apri su TikTok" resta sempre visibile
+// come via di fuga per guardare comunque il contenuto.
+function TikTokPlayerFrame({ embed, scale, url }: { embed: string; scale: number; url: string }) {
   return (
-    <iframe
-      src={embed}
-      style={{
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: TIKTOK_NATIVE_WIDTH,
-        height: TIKTOK_NATIVE_HEIGHT,
-        transform: `scale(${scale})`,
-        transformOrigin: "top left",
-      }}
-      allow="encrypted-media; picture-in-picture; web-share; autoplay"
-      allowFullScreen
-      title="Video TikTok"
-    />
+    <>
+      <iframe
+        src={embed}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: TIKTOK_NATIVE_WIDTH,
+          height: TIKTOK_NATIVE_HEIGHT,
+          transform: `scale(${scale})`,
+          transformOrigin: "top left",
+        }}
+        allow="encrypted-media; picture-in-picture; web-share; autoplay"
+        allowFullScreen
+        title="Video TikTok"
+      />
+      <a
+        href={url}
+        target="_blank"
+        rel="noreferrer"
+        className="absolute right-2 top-2 z-10 flex items-center gap-1 rounded-full bg-black/60 px-2.5 py-1 text-[11px] font-medium text-white shadow-lg backdrop-blur transition hover:bg-black/80"
+      >
+        Apri su TikTok
+        <ArrowUpRight className="size-3" />
+      </a>
+    </>
   );
 }
 
@@ -226,7 +241,7 @@ function TikTokEmbed({ embed, url }: { embed: string; url: string }) {
       }
     >
       {activated ? (
-        <TikTokPlayerFrame embed={embed} scale={scale} />
+        <TikTokPlayerFrame embed={embed} scale={scale} url={url} />
       ) : (
         <button
           type="button"
